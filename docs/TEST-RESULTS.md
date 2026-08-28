@@ -7,6 +7,7 @@ Run on 2026-08-28 on macOS arm64 with Bun `1.3.11`, Instatic `0.0.16`, Playwrigh
 - Official release archive SHA-256 verified.
 - Cloudron package tests passed: required files, manifest/addons, immutable pins, scripts, persistence paths, 256x256 icon, 1200x400 media image, secret scan, and clean patch application.
 - Current Cloudron CLI generated and verified a one-version testing `CloudronVersions.json` in a temporary copy.
+- OrbStack `2.2.3` with Docker Engine `29.4.0` built the complete arm64 image successfully from the pinned Dockerfile, including the containerized tests and production frontend build.
 - Patched upstream production build completed successfully.
 - Focused Bun tests passed: 60 form/database/config/mail tests, including PostgreSQL URL adapter selection and the sendmail message/header-sanitization test.
 - Core browser lifecycle passed: 6/6 tests including first-run setup, owner login/logout, edit, save, publish, anonymous public render, and unpublished-draft isolation.
@@ -18,9 +19,8 @@ Instatic's development browser console emitted transient MCP workspace-bridge re
 
 ## Remaining Cloudron release gates
 
-- Docker image build: Docker/Podman is not installed.
 - Live PostgreSQL connection/migrations: no local PostgreSQL server is available.
-- A disposable Cloudron install was authorized and the configured Cloudron was inspected read-only. The guarded Cloudron connector is healthy, but its enforced policy disables provisioning, app/image upload, uninstall, restore, and arbitrary app execution. Package installation was therefore not attempted through a bypassing CLI or raw API path.
+- A disposable Cloudron install was authorized. Cloudron Connector `0.8.0` was installed locally with a fixed-purpose, hash-bound Community App provisioning tool, but the current Codex task still has the prior MCP process loaded. Codex must reload the plugin before the new install tool can be used.
 - Cloudron backup/restore, app restart, upgrade, logs, domain change, and addon credential rotation remain untested because they require that disposable installation.
 - Real relay email: requires Cloudron sendmail credentials and a recipient mailbox. The local fake-sendmail integration test passed; a real message was not sent.
 
