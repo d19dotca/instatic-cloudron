@@ -1,0 +1,6 @@
+[0.1.0]
+* Initial Cloudron Community App package for Instatic 0.0.16.
+* Use Cloudron-managed PostgreSQL and persistent storage under /app/data.
+* Generate and persist INSTATIC_SECRET_KEY automatically.
+* Add Cloudron sendmail transport for public form notifications.
+* Add health checks, tests, release metadata, and operator documentation.

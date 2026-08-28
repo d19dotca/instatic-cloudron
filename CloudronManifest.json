@@ -1,0 +1,40 @@
+{
+  "id": "io.github.d19dotca.instatic",
+  "title": "Instatic",
+  "tagline": "Visual CMS that publishes fast, plain HTML",
+  "description": "file://DESCRIPTION.md",
+  "version": "0.1.0",
+  "upstreamVersion": "0.0.16",
+  "minBoxVersion": "10.0.0",
+  "healthCheckPath": "/health",
+  "httpPort": 3001,
+  "configurePath": "/admin",
+  "addons": {
+    "localstorage": {},
+    "postgresql": {},
+    "sendmail": {
+      "supportsDisplayName": true
+    }
+  },
+  "memoryLimit": 1073741824,
+  "manifestVersion": 2,
+  "website": "https://instatic.com",
+  "packageUrl": "https://github.com/d19dotca/instatic-cloudron",
+  "documentationUrl": "https://github.com/d19dotca/instatic-cloudron#readme",
+  "forumUrl": "https://forum.cloudron.io/category/96/community-apps",
+  "packagerName": "d19dotca",
+  "packagerUrl": "https://github.com/d19dotca",
+  "icon": "file://icon.png",
+  "iconUrl": "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/main/icon.png",
+  "tags": [
+    "cms",
+    "website",
+    "static site",
+    "visual editor"
+  ],
+  "mediaLinks": [
+    "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/main/media/instatic-setup.png"
+  ],
+  "postInstallMessage": "file://POSTINSTALL.md",
+  "changelog": "file://CHANGELOG"
+}

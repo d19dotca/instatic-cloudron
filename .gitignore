@@ -1,0 +1,7 @@
+.DS_Store
+.env
+output/*
+!output/.gitkeep
+!output/playwright/
+output/playwright/*
+!output/playwright/.gitkeep
