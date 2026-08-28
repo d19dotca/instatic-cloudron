@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1.7
 
-ARG BUN_IMAGE=oven/bun:1.3.11@sha256:0733e50325078969732ebe3b15ce4c4be5082f18c4ac1a0f0ca4839c2e4e42a7
+# Cloudron's base image is linux/amd64. Pin Bun's amd64 leaf manifest so an
+# Apple-silicon build cannot silently copy an arm64 Bun binary into it.
+ARG BUN_IMAGE=oven/bun:1.3.11@sha256:38919894db4e117a37f74e3dca503e84f24d97f19cabc5f499a289c2a5d0db7c
 FROM ${BUN_IMAGE} AS source
 
 ARG INSTATIC_VERSION=0.0.16
