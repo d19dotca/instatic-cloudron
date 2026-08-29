@@ -33,7 +33,7 @@ chown cloudron:cloudron /run/instatic/msmtp-password
 
 cat > /run/instatic/msmtprc <<EOF
 defaults
-auth on
+auth plain
 tls off
 account cloudron
 host ${CLOUDRON_MAIL_SMTP_SERVER}
@@ -52,7 +52,7 @@ export PUBLIC_ORIGIN="${PUBLIC_ORIGIN:-${CLOUDRON_APP_ORIGIN}}"
 export INSTATIC_SECRET_KEY
 INSTATIC_SECRET_KEY=$(<"${secret_file}")
 export INSTATIC_FORM_EMAIL_TO="${INSTATIC_FORM_EMAIL_TO:-${CLOUDRON_MAIL_FROM}}"
-export MSMTP_CONFIG=/run/instatic/msmtprc
+export INSTATIC_MSMTP_CONFIG=/run/instatic/msmtprc
 export UPLOADS_DIR=/app/data/uploads
 export STATIC_DIR=/app/code/dist
 export PORT=3001

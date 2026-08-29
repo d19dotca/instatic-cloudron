@@ -17,7 +17,7 @@ done
 
 if jq -e '
     .manifestVersion == 2 and
-    .version == "0.1.0" and
+    .version == "0.1.2" and
     .upstreamVersion == "0.0.16" and
     .httpPort == 3001 and
     .healthCheckPath == "/health" and
@@ -63,7 +63,10 @@ if rg -q '/app/data/uploads' "${package_dir}/start.sh" \
     && rg -q '/app/data/secrets/instatic-secret-key' "${package_dir}/start.sh" \
     && rg -q 'CLOUDRON_POSTGRESQL_URL' "${package_dir}/start.sh" \
     && rg -q 'CLOUDRON_APP_ORIGIN' "${package_dir}/start.sh" \
-    && rg -q 'CLOUDRON_MAIL_SMTP_SERVER' "${package_dir}/start.sh"; then
+    && rg -q 'CLOUDRON_MAIL_SMTP_SERVER' "${package_dir}/start.sh" \
+    && rg -q 'INSTATIC_MSMTP_CONFIG=/run/instatic/msmtprc' "${package_dir}/start.sh" \
+    && rg -q 'auth plain' "${package_dir}/start.sh" \
+    && rg -q "'\\-C', configPath" "${package_dir}/patches/0001-cloudron-form-email.patch"; then
     pass 'runtime persistence, database, domain, and mail wiring'
 else
     fail 'runtime wiring'

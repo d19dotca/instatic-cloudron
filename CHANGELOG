@@ -1,3 +1,9 @@
+[0.1.2]
+* Force PLAIN authentication for Cloudron's trusted internal SMTP relay; msmtp excludes cleartext methods from automatic selection when TLS is disabled.
+
+[0.1.1]
+* Pass the generated Cloudron msmtp configuration explicitly to sendmail.
+
 [0.1.0]
 * Initial Cloudron Community App package for Instatic 0.0.16.
 * Use Cloudron-managed PostgreSQL and persistent storage under /app/data.

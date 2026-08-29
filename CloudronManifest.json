@@ -3,7 +3,7 @@
   "title": "Instatic",
   "tagline": "Visual CMS that publishes fast, plain HTML",
   "description": "file://DESCRIPTION.md",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "upstreamVersion": "0.0.16",
   "minBoxVersion": "10.0.0",
   "healthCheckPath": "/health",

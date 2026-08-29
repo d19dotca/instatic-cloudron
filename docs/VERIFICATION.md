@@ -13,7 +13,7 @@ This validates metadata, pinned images/releases, patch applicability, scripts, p
 If Docker is available:
 
 ```sh
-docker build --pull --no-cache -t instatic-cloudron:0.1.0 .
+docker build --pull --no-cache -t instatic-cloudron:0.1.2 .
 ```
 
 ## Disposable Cloudron acceptance test

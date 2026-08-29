@@ -28,8 +28,8 @@ From this directory, the CLI uploads the build context, builds the image on the 
 For a registry build:
 
 ```sh
-cloudron build --set-build-service --tag registry.example.com/instatic-cloudron:0.1.0
-cloudron install --location instatic.example.com --image registry.example.com/instatic-cloudron:0.1.0
+cloudron build --set-build-service --tag registry.example.com/instatic-cloudron:0.1.2
+cloudron install --location instatic.example.com --image registry.example.com/instatic-cloudron:0.1.2
 ```
 
 Open `https://instatic.example.com/admin` and complete first-run setup. There are no package-supplied credentials.
@@ -48,7 +48,7 @@ Restart the app after changing the file. The file is backed up with `/app/data`.
 To send a transport-only test from the app terminal without exposing the password:
 
 ```sh
-printf 'To: owner@example.com\nSubject: Instatic Cloudron mail test\n\nMail transport works.\n' | /usr/sbin/sendmail -t
+printf 'To: owner@example.com\nSubject: Instatic Cloudron mail test\n\nMail transport works.\n' | /usr/sbin/sendmail -C /run/instatic/msmtprc -t -oi
 ```
 
 ## Backups, restore, restart, and domains

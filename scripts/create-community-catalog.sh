@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-image=${1:?Usage: create-community-catalog.sh registry.example.com/instatic-cloudron:0.1.0}
+image=${1:?Usage: create-community-catalog.sh registry.example.com/instatic-cloudron:0.1.2}
 package_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "${package_dir}"
 

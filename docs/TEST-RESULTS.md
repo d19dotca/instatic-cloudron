@@ -1,6 +1,6 @@
 # Local test results
 
-Run on 2026-08-28 on macOS arm64 with Bun `1.3.11`, Instatic `0.0.16`, Playwright `1.60.0`, Chromium `148.0.7778.96`, and Cloudron CLI `9.0.2`.
+Run on 2026-08-28 and 2026-08-29 on macOS arm64 with Bun `1.3.11`, Instatic `0.0.16`, Playwright `1.60.0`, Chromium `148.0.7778.96`, and Cloudron CLI `9.0.2`.
 
 ## Passed
 
@@ -28,7 +28,11 @@ Run on 2026-08-28 on macOS arm64 with Bun `1.3.11`, Instatic `0.0.16`, Playwrigh
 - Populated-state restart task `36617` completed successfully; PostgreSQL-backed content, the public page, health endpoint, and uploaded file all survived.
 - Populated-state backup task `36618` completed successfully and exactly one new encrypted app backup was verified.
 - The private form-recipient override was stored under `/app/data/env`, verified by hash without exposing its contents, and survived restart task `36619`; app readback afterward was `running` and `healthy`.
-- A CMS-native form backed by a PostgreSQL table was authored and published. Its public input and submit control are visible and enabled; the final real-mail submission is awaiting action-time confirmation.
+- A CMS-native form backed by a PostgreSQL table was authored and published. Its public input was explicitly bound to the required table field, and one live submission persisted exactly one row.
+- Live email testing exposed and documented two packaging defects without losing form data: 0.1.0 did not pass the generated msmtp configuration; 0.1.1 passed it but left authentication on automatic selection. Version 0.1.2 passes the configuration explicitly and forces PLAIN authentication for Cloudron's trusted internal non-TLS relay.
+- A clean 0.1.2 instance installed at a disposable hostname, completed first-run setup, published the bound form, persisted exactly one PostgreSQL row, handed the notification to Cloudron without an application mail error, and the approved private recipient confirmed delivery.
+- The populated 0.1.2 instance remained healthy after restart. Its public page, administrator session, published page record, custom table, and submitted row remained available.
+- Populated-state backup task `36631` completed successfully and verified one new encrypted 0.1.2 app backup at the configured IDrive e2 backup site.
 
 Instatic's development browser console emitted transient MCP workspace-bridge reconnect messages and a media-variant warning for the tiny test fixture; the asserted workflows still passed.
 
@@ -38,6 +42,5 @@ Instatic's development browser console emitted transient MCP workspace-bridge re
 - Cloudron restore is intentionally unavailable through the guarded connector, so the verified encrypted backup has not been destructively restored.
 - Package upgrade and primary-domain change are not exposed with a complete verifier through the guarded connector and remain untested live. Startup derives `PUBLIC_ORIGIN` from Cloudron on every boot, and both paths remain release-matrix checks.
 - Addon credential rotation remains untested live.
-- Real relay email: the live form is published and prepared, but the actual submission and message send await the required action-time confirmation. The local fake-sendmail integration test passed.
 
 These remaining items are release gates in `docs/VERIFICATION.md`, not assumed successes.
