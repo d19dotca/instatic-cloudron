@@ -21,14 +21,23 @@ Run on 2026-08-28 on macOS arm64 with Bun `1.3.11`, Instatic `0.0.16`, Playwrigh
 - Cloudron `10.0.2` installed the package at the disposable test location after updating the local Cloudron CLI from `8.2.4` to `9.0.2`. Independent API readback showed installation state `installed`, run state `running`, and health `healthy`.
 - Cloudron restart task `36613` completed successfully. Subsequent app readback was healthy, and logs showed graceful SIGTERM handling followed by a clean PostgreSQL-backed startup.
 - Cloudron backup task `36614` completed successfully and exactly one new encrypted app backup was verified in the configured backup site.
+- First-run setup completed with a disposable administrator and no package-supplied credentials.
+- Live authoring and publication passed: a test page was published, returned HTTP 200 anonymously, and rendered as compact generated HTML.
+- Live upload persistence passed: the package icon was uploaded, published, and its public SHA-256 matched the source file exactly before and after restart.
+- The administration route remained protected from an anonymous client and returned only the sign-in shell, while the public page remained anonymously available.
+- Populated-state restart task `36617` completed successfully; PostgreSQL-backed content, the public page, health endpoint, and uploaded file all survived.
+- Populated-state backup task `36618` completed successfully and exactly one new encrypted app backup was verified.
+- The private form-recipient override was stored under `/app/data/env`, verified by hash without exposing its contents, and survived restart task `36619`; app readback afterward was `running` and `healthy`.
+- A CMS-native form backed by a PostgreSQL table was authored and published. Its public input and submit control are visible and enabled; the final real-mail submission is awaiting action-time confirmation.
 
 Instatic's development browser console emitted transient MCP workspace-bridge reconnect messages and a media-variant warning for the tiny test fixture; the asserted workflows still passed.
 
 ## Remaining Cloudron release gates
 
 - The first guarded Cloudron install attempt was rejected before provisioning because `packageUrl` is not an allowed Cloudron manifest property. It was removed and a regression assertion was added before retrying.
-- First-run account creation, live publishing, uploads, and form delivery await the required action-time browser confirmation for creating the disposable administrator.
-- Cloudron restore, package upgrade, domain change, and addon credential rotation remain untested.
-- Real relay email: requires Cloudron sendmail credentials and a recipient mailbox. The local fake-sendmail integration test passed; a real message was not sent.
+- Cloudron restore is intentionally unavailable through the guarded connector, so the verified encrypted backup has not been destructively restored.
+- Package upgrade and primary-domain change are not exposed with a complete verifier through the guarded connector and remain untested live. Startup derives `PUBLIC_ORIGIN` from Cloudron on every boot, and both paths remain release-matrix checks.
+- Addon credential rotation remains untested live.
+- Real relay email: the live form is published and prepared, but the actual submission and message send await the required action-time confirmation. The local fake-sendmail integration test passed.
 
 These remaining items are release gates in `docs/VERIFICATION.md`, not assumed successes.
