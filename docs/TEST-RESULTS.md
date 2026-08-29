@@ -17,13 +17,18 @@ Run on 2026-08-28 on macOS arm64 with Bun `1.3.11`, Instatic `0.0.16`, Playwrigh
 - Production server restart check passed with the same local SQLite data and upload roots: `/health`, the published page, and the uploaded image returned successfully before and after restart.
 - The packaged image booted against disposable PostgreSQL `17.6`, created all 38 expected tables, and became Docker-health-check healthy.
 - `/app/data/uploads` and `/app/data/secrets` were created. The generated secret-key checksum was unchanged across a container restart, and `/health` returned successfully afterward.
+- Docker Hub and the current Cloudron packaging guide were rechecked on 2026-08-28. The package already uses the recommended `cloudron/base:5.1.0` digest `sha256:1c0666c9abe9e2090d33686826d4e97769b799124573118d41e0d7485135748e`.
+- Cloudron `10.0.2` installed the package at the disposable test location after updating the local Cloudron CLI from `8.2.4` to `9.0.2`. Independent API readback showed installation state `installed`, run state `running`, and health `healthy`.
+- Cloudron restart task `36613` completed successfully. Subsequent app readback was healthy, and logs showed graceful SIGTERM handling followed by a clean PostgreSQL-backed startup.
+- Cloudron backup task `36614` completed successfully and exactly one new encrypted app backup was verified in the configured backup site.
 
 Instatic's development browser console emitted transient MCP workspace-bridge reconnect messages and a media-variant warning for the tiny test fixture; the asserted workflows still passed.
 
 ## Remaining Cloudron release gates
 
-- A disposable Cloudron install was authorized. Cloudron Connector `0.8.0` was installed locally with a fixed-purpose, hash-bound Community App provisioning tool, but the current Codex task still has the prior MCP process loaded. Codex must reload the plugin before the new install tool can be used.
-- Cloudron backup/restore, app restart, upgrade, logs, domain change, and addon credential rotation remain untested because they require that disposable installation.
+- The first guarded Cloudron install attempt was rejected before provisioning because `packageUrl` is not an allowed Cloudron manifest property. It was removed and a regression assertion was added before retrying.
+- First-run account creation, live publishing, uploads, and form delivery await the required action-time browser confirmation for creating the disposable administrator.
+- Cloudron restore, package upgrade, domain change, and addon credential rotation remain untested.
 - Real relay email: requires Cloudron sendmail credentials and a recipient mailbox. The local fake-sendmail integration test passed; a real message was not sent.
 
 These remaining items are release gates in `docs/VERIFICATION.md`, not assumed successes.

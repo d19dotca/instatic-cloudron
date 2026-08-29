@@ -19,7 +19,6 @@
   "memoryLimit": 1073741824,
   "manifestVersion": 2,
   "website": "https://instatic.com",
-  "packageUrl": "https://github.com/d19dotca/instatic-cloudron",
   "documentationUrl": "https://github.com/d19dotca/instatic-cloudron#readme",
   "forumUrl": "https://forum.cloudron.io/category/96/community-apps",
   "packagerName": "d19dotca",

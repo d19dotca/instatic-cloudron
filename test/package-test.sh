@@ -25,6 +25,7 @@ if jq -e '
     (.addons.localstorage | type == "object") and
     (.addons.postgresql | type == "object") and
     (.addons.sendmail | type == "object") and
+    (has("packageUrl") | not) and
     (.icon == "file://icon.png") and
     (.mediaLinks | length == 1)
 ' "${package_dir}/CloudronManifest.json" >/dev/null; then
