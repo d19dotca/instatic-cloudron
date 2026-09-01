@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ripgrep
       - name: Download pinned upstream source
         run: |
           curl -fsSL --retry 5 https://github.com/CoreBunch/Instatic/archive/refs/tags/v0.0.17.tar.gz -o /tmp/instatic.tar.gz
