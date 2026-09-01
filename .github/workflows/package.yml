@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Download pinned upstream source
         run: |
-          curl -fsSL --retry 5 https://github.com/CoreBunch/Instatic/archive/refs/tags/v0.0.16.tar.gz -o /tmp/instatic.tar.gz
-          echo 'c8806c1f487c81b34090e25d9bb17f6bff2b2c02c4025d90fb3e7edbfb15e430  /tmp/instatic.tar.gz' | sha256sum -c -
+          curl -fsSL --retry 5 https://github.com/CoreBunch/Instatic/archive/refs/tags/v0.0.17.tar.gz -o /tmp/instatic.tar.gz
+          echo '53a9ca19f798db7459d81ca96c15d1fe9000a970bde6f544adf660b292ee5bae  /tmp/instatic.tar.gz' | sha256sum -c -
           mkdir /tmp/instatic
           tar -xzf /tmp/instatic.tar.gz --strip-components=1 -C /tmp/instatic
       - name: Package tests

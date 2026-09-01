@@ -3,8 +3,8 @@
   "title": "Instatic",
   "tagline": "Visual CMS that publishes fast, plain HTML",
   "description": "file://DESCRIPTION.md",
-  "version": "0.1.2",
-  "upstreamVersion": "0.0.16",
+  "version": "0.1.4",
+  "upstreamVersion": "0.0.17",
   "minBoxVersion": "10.0.0",
   "healthCheckPath": "/health",
   "httpPort": 3001,
@@ -16,7 +16,7 @@
       "supportsDisplayName": true
     }
   },
-  "memoryLimit": 1073741824,
+  "memoryLimit": 536870912,
   "manifestVersion": 2,
   "website": "https://instatic.com",
   "documentationUrl": "https://github.com/d19dotca/instatic-cloudron#readme",

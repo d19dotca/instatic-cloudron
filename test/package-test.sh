@@ -11,17 +11,18 @@ require_file() { [[ -f "${package_dir}/$1" ]] && pass "found $1" || fail "missin
 
 for file in .dockerignore CloudronManifest.json Dockerfile start.sh healthcheck.sh icon.svg icon.png media/instatic-setup.png \
     README.md SECURITY.md DESCRIPTION.md POSTINSTALL.md CHANGELOG LICENSE LICENSES/Instatic-MIT.txt \
-    patches/0001-cloudron-form-email.patch docs/ARCHITECTURE.md docs/REFERENCES.md docs/TEST-RESULTS.md docs/UPSTREAM.md docs/VERIFICATION.md; do
+    patches/0001-cloudron-form-email.patch docs/ACCEPTANCE-0.1.3.md docs/ARCHITECTURE.md docs/REFERENCES.md docs/TEST-RESULTS.md docs/UPSTREAM.md docs/VERIFICATION.md; do
     require_file "${file}"
 done
 
 if jq -e '
     .manifestVersion == 2 and
-    .version == "0.1.2" and
-    .upstreamVersion == "0.0.16" and
+    .version == "0.1.4" and
+    .upstreamVersion == "0.0.17" and
     .httpPort == 3001 and
     .healthCheckPath == "/health" and
     .configurePath == "/admin" and
+    .memoryLimit == 536870912 and
     (.addons.localstorage | type == "object") and
     (.addons.postgresql | type == "object") and
     (.addons.sendmail | type == "object") and
@@ -34,6 +35,12 @@ else
     fail 'manifest contract'
 fi
 
+if ! rg -n '^\s*set\s+-[^#]*x|^\s*(printenv|env)(\s|$)' "${package_dir}/start.sh" >/dev/null; then
+    pass 'startup script does not enable tracing or dump the environment'
+else
+    fail 'startup script must not trace commands or dump the environment'
+fi
+
 if rg -q 'cloudron/base:5\.1\.0@sha256:[0-9a-f]{64}' "${package_dir}/Dockerfile" \
     && rg -q 'oven/bun:1\.3\.11@sha256:[0-9a-f]{64}' "${package_dir}/Dockerfile" \
     && ! rg -n '(^|:)latest([ @]|$)' "${package_dir}/Dockerfile" >/dev/null; then
@@ -42,8 +49,8 @@ else
     fail 'base image pinning'
 fi
 
-if rg -q 'INSTATIC_VERSION=0\.0\.16' "${package_dir}/Dockerfile" \
-    && rg -q 'INSTATIC_ARCHIVE_SHA256=c8806c1f487c81b34090e25d9bb17f6bff2b2c02c4025d90fb3e7edbfb15e430' "${package_dir}/Dockerfile"; then
+if rg -q 'INSTATIC_VERSION=0\.0\.17' "${package_dir}/Dockerfile" \
+    && rg -q 'INSTATIC_ARCHIVE_SHA256=53a9ca19f798db7459d81ca96c15d1fe9000a970bde6f544adf660b292ee5bae' "${package_dir}/Dockerfile"; then
     pass 'upstream release and archive checksum are pinned'
 else
     fail 'upstream release pin'
@@ -53,6 +60,14 @@ if rg -q 'src/__tests__/server/formMail\.test\.ts' "${package_dir}/Dockerfile"; 
     pass 'container build runs the mail integration test'
 else
     fail 'container build must run the mail integration test'
+fi
+
+if rg -q -- '--mount=type=cache,target=/root/\.bun/install/cache' "${package_dir}/Dockerfile" \
+    && rg -q -- 'COPY --chown=cloudron:cloudron' "${package_dir}/Dockerfile" \
+    && rg -q -- 'FROM source AS runtime-source' "${package_dir}/Dockerfile"; then
+    pass 'container dependency caching and runtime-layer optimization'
+else
+    fail 'container optimization contract'
 fi
 
 for script in start.sh healthcheck.sh test/package-test.sh test/cloudron-smoke.sh scripts/verify-upstream.sh scripts/create-community-catalog.sh; do

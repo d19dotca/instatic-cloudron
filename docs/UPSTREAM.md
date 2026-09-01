@@ -3,7 +3,7 @@
 ## Reviewed upstream contract
 
 - Repository and license: `CoreBunch/Instatic`, MIT.
-- Release packaged: `v0.0.16`, published 2026-08-11.
+- Release packaged: `v0.0.17`, published 2026-08-30.
 - Runtime: one Bun server for public pages, admin SPA/API, uploads, forms, and publishing.
 - Database: SQLite or PostgreSQL selected by `DATABASE_URL`; migrations run on boot.
 - Persistent upload root: `UPLOADS_DIR`, including media and `published/current`.

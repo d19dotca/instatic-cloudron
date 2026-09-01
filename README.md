@@ -1,6 +1,6 @@
 # Instatic for Cloudron
 
-Production-oriented Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.16`.
+Production-oriented Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.17`.
 
 ## What this package provides
 
@@ -28,11 +28,15 @@ From this directory, the CLI uploads the build context, builds the image on the 
 For a registry build:
 
 ```sh
-cloudron build --set-build-service --tag registry.example.com/instatic-cloudron:0.1.2
-cloudron install --location instatic.example.com --image registry.example.com/instatic-cloudron:0.1.2
+cloudron build --set-build-service --tag registry.example.com/instatic-cloudron:0.1.4
+cloudron install --location instatic.example.com --image registry.example.com/instatic-cloudron:0.1.4
 ```
 
 Open `https://instatic.example.com/admin` and complete first-run setup. There are no package-supplied credentials.
+
+## Memory sizing
+
+The package starts with a 512 MiB Cloudron memory limit. Constrained testing showed that the production image could boot, migrate PostgreSQL, and serve a bounded request load within 256 MiB, but that lower value leaves too little dependable headroom to claim as supported. Consider increasing the app to 1 GiB for heavier plugins, publishing, image processing, or concurrent editors.
 
 ## Email configuration
 

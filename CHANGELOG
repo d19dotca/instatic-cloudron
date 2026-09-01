@@ -1,3 +1,13 @@
+[0.1.4]
+* Lower the default Cloudron memory limit from 1 GiB to 512 MiB based on upstream deployment sizing and constrained runtime testing.
+* Improve dependency-layer reuse across upstream source changes with content-addressed manifest/vendor stages and Bun cache mounts.
+* Assign final runtime ownership during COPY to avoid duplicating the application tree in a recursive chown layer.
+* Exclude upstream test sources from the production runtime image after the build-stage test suite completes.
+
+[0.1.3]
+* Update Instatic from 0.0.16 to 0.0.17.
+* Preserve the Cloudron PostgreSQL, persistent uploads, runtime secret, public-origin, and sendmail integration contracts.
+
 [0.1.2]
 * Force PLAIN authentication for Cloudron's trusted internal SMTP relay; msmtp excludes cleartext methods from automatic selection when TLS is disabled.
 

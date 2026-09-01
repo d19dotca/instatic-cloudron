@@ -1,19 +1,20 @@
 # Verified references
 
-Verified on 2026-08-28 against official upstream sources:
+Verified on 2026-09-01 against official upstream sources:
 
 ## Instatic
 
-- Latest release API and release page: <https://api.github.com/repos/CoreBunch/Instatic/releases/latest>, <https://github.com/CoreBunch/Instatic/releases/tag/v0.0.16>
-- Deployment contract: <https://github.com/CoreBunch/Instatic/blob/v0.0.16/docs/deployment/README.md>
-- Docker image contract: <https://github.com/CoreBunch/Instatic/blob/v0.0.16/docs/deployment/docker-image.md>
-- Backup and restore: <https://github.com/CoreBunch/Instatic/blob/v0.0.16/docs/deployment/backup-restore.md>
-- Architecture: <https://github.com/CoreBunch/Instatic/blob/v0.0.16/docs/architecture.md>
-- Database dialects: <https://github.com/CoreBunch/Instatic/blob/v0.0.16/docs/reference/database-dialects.md>
-- Authentication and access: <https://github.com/CoreBunch/Instatic/blob/v0.0.16/docs/features/auth-and-access.md>
-- CMS-native forms: <https://github.com/CoreBunch/Instatic/blob/v0.0.16/docs/features/cms-native-forms.md>
-- Plugin system: <https://github.com/CoreBunch/Instatic/blob/v0.0.16/docs/features/plugin-system.md>
-- License: <https://github.com/CoreBunch/Instatic/blob/v0.0.16/LICENSE>
+- Release API and release page: <https://api.github.com/repos/CoreBunch/Instatic/releases/tags/v0.0.17>, <https://github.com/CoreBunch/Instatic/releases/tag/v0.0.17>
+- Full upstream comparison: <https://github.com/CoreBunch/Instatic/compare/v0.0.16...v0.0.17>
+- Deployment contract: <https://github.com/CoreBunch/Instatic/blob/v0.0.17/docs/deployment/README.md>
+- Docker image contract: <https://github.com/CoreBunch/Instatic/blob/v0.0.17/docs/deployment/docker-image.md>
+- Backup and restore: <https://github.com/CoreBunch/Instatic/blob/v0.0.17/docs/deployment/backup-restore.md>
+- Architecture: <https://github.com/CoreBunch/Instatic/blob/v0.0.17/docs/architecture.md>
+- Database dialects: <https://github.com/CoreBunch/Instatic/blob/v0.0.17/docs/reference/database-dialects.md>
+- Authentication and access: <https://github.com/CoreBunch/Instatic/blob/v0.0.17/docs/features/auth-and-access.md>
+- CMS-native forms: <https://github.com/CoreBunch/Instatic/blob/v0.0.17/docs/features/cms-native-forms.md>
+- Plugin system: <https://github.com/CoreBunch/Instatic/blob/v0.0.17/docs/features/plugin-system.md>
+- License: <https://github.com/CoreBunch/Instatic/blob/v0.0.17/LICENSE>
 
 ## Cloudron
 

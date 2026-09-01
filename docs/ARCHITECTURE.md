@@ -2,7 +2,7 @@
 
 ## Upstream pin
 
-The package builds Instatic `0.0.16` from the official GitHub release archive. The Docker build verifies SHA-256 `c8806c1f487c81b34090e25d9bb17f6bff2b2c02c4025d90fb3e7edbfb15e430` before extracting it. Bun is pinned to `1.3.11` and both build and runtime base images are pinned by digest.
+The package builds Instatic `0.0.17` from the official GitHub release archive. The Docker build verifies SHA-256 `53a9ca19f798db7459d81ca96c15d1fe9000a970bde6f544adf660b292ee5bae` before extracting it. Bun is pinned to `1.3.11` and both build and runtime base images are pinned by digest.
 
 ## Database
 
@@ -33,7 +33,7 @@ Instatic serves published static HTML/CSS itself. The package does not introduce
 
 ## Mail patch
 
-Upstream 0.0.16 persists CMS-native form submissions but has no SMTP transport and emits no plugin hook from the public form handler. Instatic plugins run in QuickJS and cannot open SMTP sockets, so a plugin-only integration is not possible.
+Upstream 0.0.17 persists CMS-native form submissions but has no SMTP transport and emits no plugin hook from the public form handler. Instatic plugins run in QuickJS and cannot open SMTP sockets, so a plugin-only integration is not possible.
 
 `patches/0001-cloudron-form-email.patch` adds one mail module and one guarded call after the database row is created. It invokes the standard `sendmail` interface, which `msmtp` routes through Cloudron's sendmail addon. The generated runtime configuration is passed explicitly with `-C /run/instatic/msmtprc`. It forces PLAIN authentication because Cloudron's app-local SMTP relay intentionally has TLS disabled, while msmtp excludes cleartext methods from automatic selection without TLS. The credential is still confined to Cloudron's private container network and a root-owned runtime file. Delivery failure is logged and does not roll back the already-persisted submission. The patch is transport-generic and suitable for proposing upstream as an optional sendmail notification hook.
 
