@@ -1,6 +1,8 @@
 # Instatic for Cloudron
 
-Production-oriented Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.17`.
+Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.17`.
+
+Package `0.1.4` is a release candidate. The source package is public, but no registry image or installable `CloudronVersions.json` catalog has been published yet.
 
 ## What this package provides
 
@@ -12,7 +14,7 @@ Production-oriented Cloudron Community App packaging for [Instatic](https://gith
 - `/health` monitoring, stdout/stderr logging, Cloudron backups, and update-safe immutable code.
 - Reproducible upstream and base-image pins, licensing notices, package tests, and Community App metadata.
 
-See [architecture decisions](docs/ARCHITECTURE.md), [verified official references](docs/REFERENCES.md), [local test results](docs/TEST-RESULTS.md), [verification matrix](docs/VERIFICATION.md), and [upstream update procedure](docs/UPSTREAM.md).
+See [architecture decisions](docs/ARCHITECTURE.md), [verified official references](docs/REFERENCES.md), [testing procedure](docs/TESTING.md), and [upstream update procedure](docs/UPSTREAM.md).
 
 ## Build and install on a disposable Cloudron
 
@@ -67,15 +69,15 @@ Read `docs/UPSTREAM.md`. Always test on a disposable clone/restore first, take a
 
 ## Community App publishing
 
-`CloudronVersions.json` is intentionally not included as a live catalog because no registry image has been published. After the user approves publication:
+`CloudronVersions.json` is intentionally absent because no registry image has been published. To publish a tested release:
 
-1. Confirm the final GitHub URLs and packager metadata in `CloudronManifest.json`.
+1. Confirm the final GitHub URLs and publishing metadata in `CloudronManifest.json`.
 2. Build and push the exact image tag.
 3. With current Cloudron CLI tooling installed, run `./scripts/create-community-catalog.sh <docker-image>`.
 4. Verify with `cloudron versions verify`.
 5. Commit and host `CloudronVersions.json`; users paste its raw HTTPS URL into Cloudron's Community Apps dialog.
 
-Nothing in this repository publishes, pushes, or submits automatically.
+Nothing in this repository publishes, pushes, or submits automatically. A GitHub source release by itself is not an installable Cloudron Community App; users need the public catalog URL.
 
 ## Licenses
 

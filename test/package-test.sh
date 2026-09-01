@@ -11,7 +11,7 @@ require_file() { [[ -f "${package_dir}/$1" ]] && pass "found $1" || fail "missin
 
 for file in .dockerignore CloudronManifest.json Dockerfile start.sh healthcheck.sh icon.svg icon.png media/instatic-setup.png \
     README.md SECURITY.md DESCRIPTION.md POSTINSTALL.md CHANGELOG LICENSE LICENSES/Instatic-MIT.txt \
-    patches/0001-cloudron-form-email.patch docs/ACCEPTANCE-0.1.3.md docs/ARCHITECTURE.md docs/REFERENCES.md docs/TEST-RESULTS.md docs/UPSTREAM.md docs/VERIFICATION.md; do
+    patches/0001-cloudron-form-email.patch docs/ARCHITECTURE.md docs/REFERENCES.md docs/TESTING.md docs/UPSTREAM.md; do
     require_file "${file}"
 done
 
@@ -26,7 +26,7 @@ if jq -e '
     (.addons.localstorage | type == "object") and
     (.addons.postgresql | type == "object") and
     (.addons.sendmail | type == "object") and
-    (has("packageUrl") | not) and
+    ((has("packageUrl") | not) or .packageUrl == "https://github.com/d19dotca/instatic-cloudron") and
     (.icon == "file://icon.png") and
     (.mediaLinks | length == 1)
 ' "${package_dir}/CloudronManifest.json" >/dev/null; then

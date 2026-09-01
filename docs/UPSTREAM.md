@@ -18,7 +18,7 @@
 4. Run `./scripts/verify-upstream.sh /path/to/extracted/source`.
 5. Rebase the mail patch. If upstream has gained form events or native SMTP, remove the patch and use the supported extension point.
 6. Run `./test/package-test.sh` and `docker build --pull --no-cache .`.
-7. Install on a disposable Cloudron and run `./test/cloudron-smoke.sh https://app.example.com` plus the manual matrix in `docs/VERIFICATION.md`.
+7. Install on a disposable Cloudron and run `./test/cloudron-smoke.sh https://app.example.com` plus the manual matrix in `docs/TESTING.md`.
 8. Take a Cloudron backup, update the disposable app, verify persisted content/uploads/published output, then restore the backup and verify again.
 9. Only after review, build and push the image, update `CloudronVersions.json`, and publish the Git commit/tag.
 
