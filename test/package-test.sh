@@ -62,10 +62,10 @@ else
     fail 'container build must run the mail integration test'
 fi
 
-if rg -q -- '--mount=type=cache,target=/root/\.bun/install/cache' "${package_dir}/Dockerfile" \
+if ! rg -q -- '--mount=type=cache' "${package_dir}/Dockerfile" \
     && rg -q -- 'COPY --chown=cloudron:cloudron' "${package_dir}/Dockerfile" \
     && rg -q -- 'FROM source AS runtime-source' "${package_dir}/Dockerfile"; then
-    pass 'container dependency caching and runtime-layer optimization'
+    pass 'Cloudron-compatible dependency layering and runtime optimization'
 else
     fail 'container optimization contract'
 fi

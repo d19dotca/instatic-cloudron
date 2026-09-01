@@ -28,8 +28,7 @@ FROM ${BUN_IMAGE} AS dependencies
 WORKDIR /build/instatic
 COPY --from=source /build/instatic/package.json /build/instatic/bun.lock ./
 COPY --from=source /build/instatic/vendor ./vendor
-RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install --frozen-lockfile
+RUN bun install --frozen-lockfile
 
 FROM dependencies AS build
 COPY --from=source /build/instatic ./
@@ -44,8 +43,7 @@ FROM ${BUN_IMAGE} AS production-dependencies
 WORKDIR /build/instatic
 COPY --from=source /build/instatic/package.json /build/instatic/bun.lock ./
 COPY --from=source /build/instatic/vendor ./vendor
-RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install --frozen-lockfile --production
+RUN bun install --frozen-lockfile --production
 
 FROM source AS runtime-source
 RUN find /build/instatic/src /build/instatic/server \
