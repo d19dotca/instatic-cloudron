@@ -55,6 +55,9 @@ RUN find /build/instatic/src /build/instatic/server \
 FROM cloudron/base:5.1.0@sha256:1c0666c9abe9e2090d33686826d4e97769b799124573118d41e0d7485135748e
 
 ARG DEBIAN_FRONTEND=noninteractive
+LABEL org.opencontainers.image.source="https://github.com/d19dotca/instatic-cloudron" \
+      org.opencontainers.image.description="Instatic packaged for Cloudron" \
+      org.opencontainers.image.licenses="MIT"
 RUN apt-get update \
     && apt-get install -y --no-install-recommends msmtp-mta \
     && rm -rf /var/lib/apt/lists/*

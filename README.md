@@ -2,7 +2,17 @@
 
 Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.17`.
 
-Package `0.1.4` is a release candidate. The source package is public, but no registry image or installable `CloudronVersions.json` catalog has been published yet.
+Package `0.1.4` is the first public Community App release.
+
+## Install as a Community App
+
+Add this catalog URL under **Cloudron Dashboard → Settings → Community Apps**:
+
+```text
+https://raw.githubusercontent.com/d19dotca/instatic-cloudron/main/CloudronVersions.json
+```
+
+The catalog installs the published `linux/amd64` image from GitHub Container Registry. Cloudron 10.0.0 or newer is required.
 
 ## What this package provides
 
@@ -67,17 +77,13 @@ Changing the primary app domain is supported automatically because `PUBLIC_ORIGI
 
 Read `docs/UPSTREAM.md`. Always test on a disposable clone/restore first, take a fresh backup, and bump the Cloudron package version. Do not change from PostgreSQL to SQLite as an ordinary package update.
 
-## Community App publishing
+## Support
 
-`CloudronVersions.json` is intentionally absent because no registry image has been published. To publish a tested release:
+Use [GitHub Issues](https://github.com/d19dotca/instatic-cloudron/issues) for reproducible package problems and installation questions. Include the package version, Cloudron version, and sanitized logs. Do not post credentials, database exports, form submissions, or raw lifecycle logs containing addon configuration.
 
-1. Confirm the final GitHub URLs and publishing metadata in `CloudronManifest.json`.
-2. Build and push the exact image tag.
-3. With current Cloudron CLI tooling installed, run `./scripts/create-community-catalog.sh <docker-image>`.
-4. Verify with `cloudron versions verify`.
-5. Commit and host `CloudronVersions.json`; users paste its raw HTTPS URL into Cloudron's Community Apps dialog.
+Package-specific security reports should be submitted privately through [GitHub Security Advisories](https://github.com/d19dotca/instatic-cloudron/security/advisories/new). Upstream Instatic defects belong in the [Instatic issue tracker](https://github.com/CoreBunch/Instatic/issues).
 
-Nothing in this repository publishes, pushes, or submits automatically. A GitHub source release by itself is not an installable Cloudron Community App; users need the public catalog URL.
+Only the latest package release is supported on a best-effort community basis.
 
 ## Licenses
 

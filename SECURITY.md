@@ -1,6 +1,6 @@
 # Security policy
 
-Report package-specific vulnerabilities privately to the packager through the security contact mechanism on the package repository. Report upstream Instatic vulnerabilities to the Instatic maintainers.
+Report package-specific vulnerabilities privately through [GitHub Security Advisories](https://github.com/d19dotca/instatic-cloudron/security/advisories/new). For non-sensitive support, use [GitHub Issues](https://github.com/d19dotca/instatic-cloudron/issues). Contact the package maintainer at `dustin@d19.ca` only when GitHub's private reporting mechanism is unavailable. Report upstream Instatic vulnerabilities to the Instatic maintainers.
 
 Do not include live Cloudron tokens, addon credentials, form submissions, database dumps, `/app/data/env`, or `instatic-secret-key` contents in issues or logs.
 

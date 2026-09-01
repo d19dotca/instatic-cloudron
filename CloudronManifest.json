@@ -1,6 +1,7 @@
 {
   "id": "io.github.d19dotca.instatic",
   "title": "Instatic",
+  "author": "Dustin Dauncey <dustin@d19.ca>",
   "tagline": "Visual CMS that publishes fast, plain HTML",
   "description": "file://DESCRIPTION.md",
   "version": "0.1.4",
@@ -19,7 +20,9 @@
   "memoryLimit": 536870912,
   "manifestVersion": 2,
   "website": "https://instatic.com",
+  "contactEmail": "dustin@d19.ca",
   "documentationUrl": "https://github.com/d19dotca/instatic-cloudron#readme",
+  "packageUrl": "https://github.com/d19dotca/instatic-cloudron",
   "packagerName": "d19dotca",
   "packagerUrl": "https://github.com/d19dotca",
   "icon": "file://icon.png",

@@ -9,7 +9,7 @@ pass() { printf 'PASS: %s\n' "$1"; }
 fail() { printf 'FAIL: %s\n' "$1" >&2; failures=$((failures + 1)); }
 require_file() { [[ -f "${package_dir}/$1" ]] && pass "found $1" || fail "missing $1"; }
 
-for file in .dockerignore CloudronManifest.json Dockerfile start.sh healthcheck.sh icon.svg icon.png media/instatic-setup.png \
+for file in .dockerignore CloudronManifest.json CloudronVersions.json Dockerfile start.sh healthcheck.sh icon.svg icon.png media/instatic-setup.png \
     README.md SECURITY.md DESCRIPTION.md POSTINSTALL.md CHANGELOG LICENSE LICENSES/Instatic-MIT.txt \
     patches/0001-cloudron-form-email.patch docs/ARCHITECTURE.md docs/REFERENCES.md docs/TESTING.md docs/UPSTREAM.md; do
     require_file "${file}"
@@ -17,6 +17,8 @@ done
 
 if jq -e '
     .manifestVersion == 2 and
+    .author == "Dustin Dauncey <dustin@d19.ca>" and
+    .contactEmail == "dustin@d19.ca" and
     .version == "0.1.4" and
     .upstreamVersion == "0.0.17" and
     .httpPort == 3001 and
@@ -26,13 +28,24 @@ if jq -e '
     (.addons.localstorage | type == "object") and
     (.addons.postgresql | type == "object") and
     (.addons.sendmail | type == "object") and
-    ((has("packageUrl") | not) or .packageUrl == "https://github.com/d19dotca/instatic-cloudron") and
+    .packageUrl == "https://github.com/d19dotca/instatic-cloudron" and
     (.icon == "file://icon.png") and
     (.mediaLinks | length == 1)
 ' "${package_dir}/CloudronManifest.json" >/dev/null; then
     pass 'manifest contract'
 else
     fail 'manifest contract'
+fi
+
+if jq -e '
+    .stable == true and
+    .versions["0.1.4"].publishState == "published" and
+    .versions["0.1.4"].manifest.dockerImage == "ghcr.io/d19dotca/instatic-cloudron:0.1.4" and
+    .versions["0.1.4"].manifest.memoryLimit == 536870912
+' "${package_dir}/CloudronVersions.json" >/dev/null; then
+    pass 'published community catalog contract'
+else
+    fail 'published community catalog contract'
 fi
 
 if ! rg -n '^\s*set\s+-[^#]*x|^\s*(printenv|env)(\s|$)' "${package_dir}/start.sh" >/dev/null; then
@@ -69,6 +82,12 @@ if ! rg -q -- '--mount=type=cache' "${package_dir}/Dockerfile" \
     pass 'Cloudron-compatible dependency layering and runtime optimization'
 else
     fail 'container optimization contract'
+fi
+
+if rg -q 'org\.opencontainers\.image\.source="https://github\.com/d19dotca/instatic-cloudron"' "${package_dir}/Dockerfile"; then
+    pass 'GHCR source linkage label'
+else
+    fail 'GHCR source linkage label'
 fi
 
 for script in start.sh healthcheck.sh test/package-test.sh test/cloudron-smoke.sh scripts/verify-upstream.sh scripts/create-community-catalog.sh; do

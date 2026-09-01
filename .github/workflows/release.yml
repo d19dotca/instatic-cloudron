@@ -1,0 +1,57 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: ghcr.io/d19dotca/instatic-cloudron
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v6
+
+      - name: Verify tag and package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(jq -r .version CloudronManifest.json)"
+          test "${GITHUB_REF_NAME}" = "v${version}"
+          ./test/package-test.sh
+          git diff --check
+
+      - name: Build linux/amd64 image
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(jq -r .version CloudronManifest.json)"
+          docker build --pull --platform linux/amd64 --tag "${IMAGE}:${version}" .
+
+      - name: Log in to GHCR
+        shell: bash
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Publish image
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(jq -r .version CloudronManifest.json)"
+          docker push "${IMAGE}:${version}"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(jq -r .version CloudronManifest.json)"
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "Instatic for Cloudron ${version}" \
+            --notes "$(sed -n '/^\[0.1.4\]/,/^$/p' CHANGELOG | tail -n +2)"

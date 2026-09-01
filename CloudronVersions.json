@@ -1,0 +1,52 @@
+{
+    "stable": true,
+    "versions": {
+        "0.1.4": {
+            "manifest": {
+                "id": "io.github.d19dotca.instatic",
+                "title": "Instatic",
+                "author": "Dustin Dauncey <dustin@d19.ca>",
+                "tagline": "Visual CMS that publishes fast, plain HTML",
+                "description": "# Instatic\n\nInstatic is an open-source visual CMS that publishes semantic, plain HTML and clean CSS. The public site is served from generated static artifacts, while authors manage content and design through the protected `/admin` interface.\n\nThis Cloudron Community App package provides managed PostgreSQL, persistent media and published artifacts, automatic encryption-secret generation, Cloudron outbound email for form notifications, health monitoring, backups, restore compatibility, and restart-safe configuration.\n\nInstatic is an early-stage upstream project. Review the package changelog and take a backup before every update.\n",
+                "version": "0.1.4",
+                "upstreamVersion": "0.0.17",
+                "minBoxVersion": "10.0.0",
+                "healthCheckPath": "/health",
+                "httpPort": 3001,
+                "configurePath": "/admin",
+                "addons": {
+                    "localstorage": {},
+                    "postgresql": {},
+                    "sendmail": {
+                        "supportsDisplayName": true
+                    }
+                },
+                "memoryLimit": 536870912,
+                "manifestVersion": 2,
+                "website": "https://instatic.com",
+                "contactEmail": "dustin@d19.ca",
+                "documentationUrl": "https://github.com/d19dotca/instatic-cloudron#readme",
+                "packageUrl": "https://github.com/d19dotca/instatic-cloudron",
+                "packagerName": "d19dotca",
+                "packagerUrl": "https://github.com/d19dotca",
+                "icon": "file://icon.png",
+                "iconUrl": "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/main/icon.png",
+                "tags": [
+                    "cms",
+                    "website",
+                    "static site",
+                    "visual editor"
+                ],
+                "mediaLinks": [
+                    "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/main/media/instatic-setup.png"
+                ],
+                "postInstallMessage": "Instatic is ready at **$CLOUDRON-APP-ORIGIN**.\n\n1. Open **$CLOUDRON-APP-ORIGIN/admin**.\n2. Complete Instatic's first-run setup and create the owner account. No default credentials are generated.\n3. Publish a page and verify it anonymously.\n4. Form notifications default to the Cloudron sender address. To send them elsewhere, create `/app/data/env` with `INSTATIC_FORM_EMAIL_TO='recipient@example.com'`, then restart the app.\n\nThe admin area uses Instatic's own accounts, sessions, CSRF protection, login rate limiting, step-up authentication, and optional TOTP MFA. Cloudron dashboard visibility does not grant an Instatic account.\n",
+                "changelog": "* Lower the default Cloudron memory limit from 1 GiB to 512 MiB based on upstream deployment sizing and constrained runtime testing.\n* Improve dependency-layer reuse across upstream source changes with content-addressed manifest/vendor stages while remaining compatible with Cloudron's non-BuildKit on-server builder.\n* Assign final runtime ownership during COPY to avoid duplicating the application tree in a recursive chown layer.\n* Exclude upstream test sources from the production runtime image after the build-stage test suite completes.\n",
+                "dockerImage": "ghcr.io/d19dotca/instatic-cloudron:0.1.4"
+            },
+            "creationDate": "Tue, 01 Sep 2026 21:23:01 GMT",
+            "ts": "Tue, 01 Sep 2026 21:23:15 GMT",
+            "publishState": "published"
+        }
+    }
+}
