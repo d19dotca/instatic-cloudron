@@ -63,6 +63,7 @@ else
 fi
 
 if ! rg -q -- '--mount=type=cache' "${package_dir}/Dockerfile" \
+    && ! rg -q -- 'COPY .*--chmod' "${package_dir}/Dockerfile" \
     && rg -q -- 'COPY --chown=cloudron:cloudron' "${package_dir}/Dockerfile" \
     && rg -q -- 'FROM source AS runtime-source' "${package_dir}/Dockerfile"; then
     pass 'Cloudron-compatible dependency layering and runtime optimization'

@@ -67,7 +67,8 @@ COPY --chown=cloudron:cloudron --from=runtime-source /build/instatic/package.jso
 COPY --chown=cloudron:cloudron --from=runtime-source /build/instatic/tsconfig.json /build/instatic/tsconfig.app.json /build/instatic/tsconfig.node.json ./
 COPY --chown=cloudron:cloudron --from=runtime-source /build/instatic/server ./server
 COPY --chown=cloudron:cloudron --from=runtime-source /build/instatic/src ./src
-COPY --chown=cloudron:cloudron --chmod=0755 start.sh healthcheck.sh ./
+COPY --chown=cloudron:cloudron start.sh healthcheck.sh ./
+RUN chmod 0755 /app/code/start.sh /app/code/healthcheck.sh
 
 ENV NODE_ENV=production \
     PORT=3001 \
