@@ -2,6 +2,8 @@ name: release
 
 on:
   push:
+    branches:
+      - "release/v*"
     tags:
       - "v*"
 
@@ -15,15 +17,18 @@ jobs:
     env:
       IMAGE: ghcr.io/d19dotca/instatic-cloudron
     steps:
-      - name: Check out release tag
+      - name: Check out release source
         uses: actions/checkout@v6
 
-      - name: Verify tag and package
+      - name: Verify release reference and package
         shell: bash
         run: |
           set -euo pipefail
           version="$(jq -r .version CloudronManifest.json)"
-          test "${GITHUB_REF_NAME}" = "v${version}"
+          case "${GITHUB_REF_TYPE}:${GITHUB_REF_NAME}" in
+            "tag:v${version}"|"branch:release/v${version}") ;;
+            *) echo "Release ref does not match manifest version ${version}" >&2; exit 1 ;;
+          esac
           ./test/package-test.sh
           git diff --check
 
@@ -52,6 +57,7 @@ jobs:
         run: |
           set -euo pipefail
           version="$(jq -r .version CloudronManifest.json)"
-          gh release create "${GITHUB_REF_NAME}" \
+          gh release create "v${version}" \
+            --target "${GITHUB_SHA}" \
             --title "Instatic for Cloudron ${version}" \
             --notes "$(sed -n '/^\[0.1.4\]/,/^$/p' CHANGELOG | tail -n +2)"
