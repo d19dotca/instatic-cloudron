@@ -67,6 +67,13 @@ else
     fail 'installation-facing documentation must match the pinned upstream version'
 fi
 
+if rg -q 'package `0\.2\.0` is the latest published catalog release' "${package_dir}/README.md" \
+    && ! rg -q 'Package `0\.2\.0` is an unreleased candidate' "${package_dir}/README.md"; then
+    pass 'README release status matches the published catalog'
+else
+    fail 'README release status must match the published catalog'
+fi
+
 if rg -q "^\\[${manifest_version//./\\.}\\]$" "${package_dir}/CHANGELOG"; then
     pass 'manifest version has a changelog section'
 else

@@ -6,7 +6,7 @@
 
 Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.18`.
 
-> **Release status:** package `0.1.4` is the latest published catalog release. Package `0.2.0` is an unreleased candidate under validation. The `main` branch can therefore be newer than the catalog; use `CloudronVersions.json` unless you intentionally want to test package development.
+> **Release status:** package `0.2.0` is the latest published catalog release. The `main` branch may become newer than the catalog during future package development; use `CloudronVersions.json` for installations unless you intentionally want to test unreleased source changes.
 
 ## Install as a Community App
 
