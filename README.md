@@ -4,7 +4,7 @@
 [![Latest release](https://img.shields.io/github/v/release/d19dotca/instatic-cloudron?label=package)](https://github.com/d19dotca/instatic-cloudron/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.17`.
+Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.18`.
 
 > **Release status:** package `0.1.4` is the latest published catalog release. Package `0.2.0` is an unreleased candidate under validation. The `main` branch can therefore be newer than the catalog; use `CloudronVersions.json` unless you intentionally want to test package development.
 
@@ -66,7 +66,7 @@ Cloudron queries Instatic's `/health` endpoint and considers the app healthy whe
 
 ## Forms and email notifications
 
-The Community App ships Instatic's native form behavior without downstream application patches. CMS-native forms validate submissions and save them to their configured Instatic data tables. Upstream Instatic `0.0.17` does not send form-submission email notifications, and this package does not request Cloudron's sendmail addon.
+The Community App ships Instatic's native form behavior without downstream application patches. CMS-native forms validate submissions and save them to their configured Instatic data tables. Upstream Instatic `0.0.18` does not send form-submission email notifications, and this package does not request Cloudron's sendmail addon.
 
 If email notification is required, use a separately maintained experimental image or a supported upstream integration when one becomes available. Keep the Instatic data table as the authoritative submission record.
 

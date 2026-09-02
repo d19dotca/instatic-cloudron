@@ -23,7 +23,7 @@ if jq -e --arg manifest_version "${manifest_version}" '
     .author == "Dustin Dauncey <dustin@d19.ca>" and
     .title == "Instatic" and
     .version == $manifest_version and
-    .upstreamVersion == "0.0.17" and
+    .upstreamVersion == "0.0.18" and
     .httpPort == 3001 and
     .multiDomain == true and
     .healthCheckPath == "/health" and
@@ -90,8 +90,8 @@ else
     fail 'base image pinning'
 fi
 
-if rg -q 'INSTATIC_VERSION=0\.0\.17' "${package_dir}/Dockerfile" \
-    && rg -q 'INSTATIC_ARCHIVE_SHA256=53a9ca19f798db7459d81ca96c15d1fe9000a970bde6f544adf660b292ee5bae' "${package_dir}/Dockerfile"; then
+if rg -q 'INSTATIC_VERSION=0\.0\.18' "${package_dir}/Dockerfile" \
+    && rg -q 'INSTATIC_ARCHIVE_SHA256=3ea00de8e080d94d28e0a97c18dcf4d5763a1d2eca7ef2231b4f0b52241f4163' "${package_dir}/Dockerfile"; then
     pass 'upstream release and archive checksum are pinned'
 else
     fail 'upstream release pin'

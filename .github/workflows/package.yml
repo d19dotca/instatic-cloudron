@@ -25,8 +25,8 @@ jobs:
           sudo apt-get install -y --no-install-recommends ripgrep
       - name: Download pinned upstream source
         run: |
-          curl -fsSL --retry 5 https://github.com/CoreBunch/Instatic/archive/refs/tags/v0.0.17.tar.gz -o /tmp/instatic.tar.gz
-          echo '53a9ca19f798db7459d81ca96c15d1fe9000a970bde6f544adf660b292ee5bae  /tmp/instatic.tar.gz' | sha256sum -c -
+          curl -fsSL --retry 5 https://github.com/CoreBunch/Instatic/archive/refs/tags/v0.0.18.tar.gz -o /tmp/instatic.tar.gz
+          echo '3ea00de8e080d94d28e0a97c18dcf4d5763a1d2eca7ef2231b4f0b52241f4163  /tmp/instatic.tar.gz' | sha256sum -c -
           mkdir /tmp/instatic
           tar -xzf /tmp/instatic.tar.gz --strip-components=1 -C /tmp/instatic
       - name: Package tests

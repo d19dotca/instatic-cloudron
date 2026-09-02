@@ -7,7 +7,7 @@ Release-specific infrastructure identifiers, accounts, form submissions, task ID
 Extract the pinned upstream Instatic release, then run:
 
 ```sh
-./test/package-test.sh /path/to/Instatic-0.0.17
+./test/package-test.sh /path/to/Instatic-0.0.18
 bash -n start.sh healthcheck.sh test/cloudron-smoke.sh scripts/*.sh
 git diff --check
 ```
@@ -24,7 +24,7 @@ Confirm that the final image uses the expected `linux/amd64` architecture and st
 
 ## Disposable Cloudron acceptance
 
-A catalog installation displays the manifest `title` and `upstreamVersion` as the dashboard's **App title & version** (for this package, `Instatic 0.0.17`). A source-upload development install has no Community App catalog identity, so Cloudron can instead display its generated `local/...` Docker image name. Do not treat that development-only fallback as missing manifest metadata.
+A catalog installation displays the manifest `title` and `upstreamVersion` as the dashboard's **App title & version** (for this package, `Instatic 0.0.18`). A source-upload development install has no Community App catalog identity, so Cloudron can instead display its generated `local/...` Docker image name. Do not treat that development-only fallback as missing manifest metadata.
 
 Run the lightweight public checks after installation:
 

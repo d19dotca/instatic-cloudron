@@ -4,7 +4,7 @@ Describe the Cloudron package behavior or documentation changed by this pull req
 
 ## Verification
 
-- [ ] `./test/package-test.sh /path/to/Instatic-0.0.17`
+- [ ] `./test/package-test.sh /path/to/Instatic-0.0.18`
 - [ ] Shell syntax and `git diff --check`
 - [ ] Clean `linux/amd64` image build
 - [ ] Relevant Cloudron acceptance completed or explicitly listed below as outstanding

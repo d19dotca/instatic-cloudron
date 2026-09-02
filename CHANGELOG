@@ -1,6 +1,7 @@
 [0.2.0]
+* Update upstream Instatic from 0.0.17 to 0.0.18, including public-form event, publishing asset, AVIF media, import, and plugin-filter fixes.
 * Remove the downstream form-email source patch and package-level SMTP transport so the Community App runs unmodified upstream Instatic.
-* Keep CMS-native form persistence while documenting that upstream Instatic 0.0.17 does not send form-submission email notifications.
+* Keep CMS-native form persistence while documenting that upstream Instatic 0.0.18 does not send form-submission email notifications.
 * Limit required Cloudron addons to PostgreSQL and local storage.
 * Replace the long post-install admin note with concise setup guidance and a trackable owner-account checklist.
 * Remove deprecated or redundant manifest metadata and use Cloudron's supported `hosting` tag.

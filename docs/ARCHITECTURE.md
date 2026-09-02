@@ -2,7 +2,7 @@
 
 ## Upstream pin
 
-The package builds Instatic `0.0.17` from the official GitHub release archive. The Docker build verifies SHA-256 `53a9ca19f798db7459d81ca96c15d1fe9000a970bde6f544adf660b292ee5bae` before extracting it. Bun is pinned to `1.3.11` and both build and runtime base images are pinned by digest.
+The package builds Instatic `0.0.18` from the official GitHub release archive. The Docker build verifies SHA-256 `3ea00de8e080d94d28e0a97c18dcf4d5763a1d2eca7ef2231b4f0b52241f4163` before extracting it. Bun is pinned to `1.3.11` and both build and runtime base images are pinned by digest.
 
 ## Database
 
@@ -35,6 +35,6 @@ Instatic serves published static HTML/CSS itself. The package does not introduce
 
 ## Forms and mail boundary
 
-Upstream Instatic `0.0.17` validates CMS-native form submissions and persists them to data tables, but does not provide form-submission email notifications. The Community App deliberately does not patch Instatic or request Cloudron's sendmail addon. This keeps application behavior owned by upstream and avoids carrying a source patch across upgrades.
+Upstream Instatic `0.0.18` validates CMS-native form submissions and persists them to data tables, but does not provide form-submission email notifications. The Community App deliberately does not patch Instatic or request Cloudron's sendmail addon. This keeps application behavior owned by upstream and avoids carrying a source patch across upgrades.
 
 Email notification should be added through a supported, platform-neutral upstream capability. Until then, installations requiring notification delivery need a separately maintained experimental image; the Community App's form data table remains the authoritative submission record.
