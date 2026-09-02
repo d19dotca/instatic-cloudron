@@ -59,6 +59,14 @@ else
     fail 'Community App description must not promise form email delivery'
 fi
 
+if rg -q 'upstream Instatic `0\.0\.18`' "${package_dir}/DESCRIPTION.md" \
+    && rg -q 'Upstream Instatic `0\.0\.18`' "${package_dir}/POSTINSTALL.md" \
+    && ! rg -q '0\.0\.17' "${package_dir}/DESCRIPTION.md" "${package_dir}/POSTINSTALL.md"; then
+    pass 'installation-facing documentation matches the pinned upstream version'
+else
+    fail 'installation-facing documentation must match the pinned upstream version'
+fi
+
 if rg -q "^\\[${manifest_version//./\\.}\\]$" "${package_dir}/CHANGELOG"; then
     pass 'manifest version has a changelog section'
 else
@@ -69,7 +77,11 @@ if jq -e '
     .stable == true and
     .versions["0.1.4"].publishState == "published" and
     .versions["0.1.4"].manifest.dockerImage == "ghcr.io/d19dotca/instatic-cloudron:0.1.4" and
-    .versions["0.1.4"].manifest.memoryLimit == 536870912
+    .versions["0.1.4"].manifest.memoryLimit == 536870912 and
+    .versions["0.2.0"].publishState == "published" and
+    .versions["0.2.0"].manifest.upstreamVersion == "0.0.18" and
+    .versions["0.2.0"].manifest.dockerImage == "ghcr.io/d19dotca/instatic-cloudron:0.2.0" and
+    .versions["0.2.0"].manifest.memoryLimit == 536870912
 ' "${package_dir}/CloudronVersions.json" >/dev/null; then
     pass 'published community catalog contract'
 else
