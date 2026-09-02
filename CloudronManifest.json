@@ -4,34 +4,31 @@
   "author": "Dustin Dauncey <dustin@d19.ca>",
   "tagline": "Visual CMS that publishes fast, plain HTML",
   "description": "file://DESCRIPTION.md",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "upstreamVersion": "0.0.17",
   "minBoxVersion": "10.0.0",
   "healthCheckPath": "/health",
   "httpPort": 3001,
   "configurePath": "/admin",
+  "checklist": {
+    "create-owner-account": {
+      "message": "Open the Admin Page and complete Instatic's first-run setup by creating the owner account. No default credentials are generated."
+    }
+  },
   "addons": {
     "localstorage": {},
-    "postgresql": {},
-    "sendmail": {
-      "supportsDisplayName": true
-    }
+    "postgresql": {}
   },
   "memoryLimit": 536870912,
   "manifestVersion": 2,
   "website": "https://instatic.com",
-  "contactEmail": "dustin@d19.ca",
-  "documentationUrl": "https://github.com/d19dotca/instatic-cloudron#readme",
   "packageUrl": "https://github.com/d19dotca/instatic-cloudron",
   "packagerName": "d19dotca",
   "packagerUrl": "https://github.com/d19dotca",
   "icon": "file://icon.png",
-  "iconUrl": "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/main/icon.png",
+  "iconUrl": "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/v0.2.0/icon.png",
   "tags": [
-    "cms",
-    "website",
-    "static site",
-    "visual editor"
+    "hosting"
   ],
   "mediaLinks": [
     "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/main/media/instatic-setup.png"

@@ -16,7 +16,7 @@
 2. Set the new `INSTATIC_VERSION` and official archive SHA-256 in `Dockerfile`.
 3. Update `upstreamVersion`, package `version`, and `CHANGELOG`.
 4. Run `./scripts/verify-upstream.sh /path/to/extracted/source`.
-5. Rebase the mail patch. If upstream has gained form events or native SMTP, remove the patch and use the supported extension point.
+5. Confirm the package still builds unmodified upstream source. If upstream gains a supported mail capability, evaluate it separately instead of introducing a downstream source patch.
 6. Run `./test/package-test.sh` and `docker build --pull --no-cache .`.
 7. Install on a disposable Cloudron and run `./test/cloudron-smoke.sh https://app.example.com` plus the manual matrix in `docs/TESTING.md`.
 8. Take a Cloudron backup, update the disposable app, verify persisted content/uploads/published output, then restore the backup and verify again.

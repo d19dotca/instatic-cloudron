@@ -1,3 +1,12 @@
+[0.2.0]
+* Remove the downstream form-email source patch and package-level SMTP transport so the Community App runs unmodified upstream Instatic.
+* Keep CMS-native form persistence while documenting that upstream Instatic 0.0.17 does not send form-submission email notifications.
+* Limit required Cloudron addons to PostgreSQL and local storage.
+* Replace the long post-install admin note with concise setup guidance and a trackable owner-account checklist.
+* Remove deprecated or redundant manifest metadata and use Cloudron's supported `hosting` tag.
+* Clarify package-versus-upstream version display and remove nonessential repository files.
+* Correct the Cloudron icon rasterization while preserving Instatic's complete canonical favicon, including its four corner dots.
+
 [0.1.4]
 * Lower the default Cloudron memory limit from 1 GiB to 512 MiB based on upstream deployment sizing and constrained runtime testing.
 * Improve dependency-layer reuse across upstream source changes with content-addressed manifest/vendor stages while remaining compatible with Cloudron's non-BuildKit on-server builder.

@@ -10,7 +10,7 @@ ARG INSTATIC_ARCHIVE_SHA256=53a9ca19f798db7459d81ca96c15d1fe9000a970bde6f544adf6
 
 USER root
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl patch \
+    && apt-get install -y --no-install-recommends ca-certificates curl \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /build
 RUN curl -fsSL --retry 5 --retry-all-errors \
@@ -20,10 +20,6 @@ RUN curl -fsSL --retry 5 --retry-all-errors \
     && mkdir /build/instatic \
     && tar -xzf /tmp/instatic.tar.gz --strip-components=1 -C /build/instatic \
     && rm /tmp/instatic.tar.gz
-COPY patches/ /tmp/patches/
-RUN cd /build/instatic \
-    && for patch_file in /tmp/patches/*.patch; do patch -p1 < "${patch_file}"; done
-
 FROM ${BUN_IMAGE} AS dependencies
 WORKDIR /build/instatic
 COPY --from=source /build/instatic/package.json /build/instatic/bun.lock ./
@@ -33,7 +29,10 @@ RUN bun install --frozen-lockfile
 FROM dependencies AS build
 COPY --from=source /build/instatic ./
 RUN bun test \
-      src/__tests__/server/formMail.test.ts \
+      src/__tests__/server/router.test.ts \
+      src/__tests__/forms/formSnapshot.test.ts \
+      src/__tests__/forms/formModules.test.ts \
+      src/__tests__/panels/formSettingsPanel.test.tsx \
       src/__tests__/forms/formValidation.test.ts \
       src/__tests__/db/createDbClient.test.ts \
       src/__tests__/server/serverConfig.test.ts
@@ -58,10 +57,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 LABEL org.opencontainers.image.source="https://github.com/d19dotca/instatic-cloudron" \
       org.opencontainers.image.description="Instatic packaged for Cloudron" \
       org.opencontainers.image.licenses="MIT"
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends msmtp-mta \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY --from=source /usr/local/bin/bun /usr/local/bin/bun
 WORKDIR /app/code
 COPY --chown=cloudron:cloudron --from=production-dependencies /build/instatic/node_modules ./node_modules
@@ -76,8 +71,7 @@ RUN chmod 0755 /app/code/start.sh /app/code/healthcheck.sh
 ENV NODE_ENV=production \
     PORT=3001 \
     STATIC_DIR=/app/code/dist \
-    UPLOADS_DIR=/app/data/uploads \
-    INSTATIC_SENDMAIL_PATH=/usr/sbin/sendmail
+    UPLOADS_DIR=/app/data/uploads
 
 EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD ["/app/code/healthcheck.sh"]

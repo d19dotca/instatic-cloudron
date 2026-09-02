@@ -2,7 +2,7 @@
 
 Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.17`.
 
-Package `0.1.4` is the first public Community App release.
+Package `0.1.4` is the first public release. The current `main` branch may contain an unreleased candidate; install through `CloudronVersions.json` unless you are testing package development.
 
 ## Install as a Community App
 
@@ -18,13 +18,12 @@ The catalog installs the published `linux/amd64` image from GitHub Container Reg
 
 - Cloudron-managed PostgreSQL.
 - Persistent uploads, fonts, plugins, and published artifacts under `/app/data/uploads`.
-- A generated 256-bit `INSTATIC_SECRET_KEY` persisted in `/app/data/secrets`.
-- Cloudron sendmail integration for public form notifications.
+- A unique random 256-bit `INSTATIC_SECRET_KEY` generated on first start and persisted in `/app/data/secrets` for that installation.
 - Automatic public-origin configuration after install, restart, restore, or domain change.
-- `/health` monitoring, stdout/stderr logging, Cloudron backups, and update-safe immutable code.
+- Cloudron health monitoring through Instatic's `/health` endpoint, stdout/stderr logging, Cloudron backups, and update-safe immutable code.
 - Reproducible upstream and base-image pins, licensing notices, package tests, and Community App metadata.
 
-See [architecture decisions](docs/ARCHITECTURE.md), [verified official references](docs/REFERENCES.md), [testing procedure](docs/TESTING.md), and [upstream update procedure](docs/UPSTREAM.md).
+See [architecture decisions](docs/ARCHITECTURE.md), [testing procedure](docs/TESTING.md), and [upstream update procedure](docs/UPSTREAM.md).
 
 ## Build and install on a disposable Cloudron
 
@@ -35,37 +34,31 @@ cloudron login my.example.com
 cloudron install --location instatic.example.com
 ```
 
-From this directory, the CLI uploads the build context, builds the image on the Cloudron, provisions PostgreSQL/localstorage/sendmail, and installs the app. Follow Cloudron CLI prompts; do not commit the local Cloudron login file or tokens.
+From this directory, the CLI uploads the build context, builds the image on the Cloudron, provisions PostgreSQL and local storage, and installs the app. Follow Cloudron CLI prompts; do not commit the local Cloudron login file or tokens.
 
-For a registry build:
+For a registry build, replace the example version with the candidate in `CloudronManifest.json`:
 
 ```sh
-cloudron build --set-build-service --tag registry.example.com/instatic-cloudron:0.1.4
-cloudron install --location instatic.example.com --image registry.example.com/instatic-cloudron:0.1.4
+version=$(jq -r .version CloudronManifest.json)
+cloudron build --set-build-service --tag "registry.example.com/instatic-cloudron:${version}"
+cloudron install --location instatic.example.com --image "registry.example.com/instatic-cloudron:${version}"
 ```
 
 Open `https://instatic.example.com/admin` and complete first-run setup. There are no package-supplied credentials.
 
 ## Memory sizing
 
-The package starts with a 512 MiB Cloudron memory limit. Constrained testing showed that the production image could boot, migrate PostgreSQL, and serve a bounded request load within 256 MiB, but that lower value leaves too little dependable headroom to claim as supported. Consider increasing the app to 1 GiB for heavier plugins, publishing, image processing, or concurrent editors.
+The package defaults to 512 MiB, which is the supported minimum for a typical installation. Increase the limit for high-traffic production sites or workloads involving heavier plugins, image processing, frequent publishing, or concurrent editors. Monitor the app's memory usage in Cloudron and size it for the site's actual workload; 1 GiB or more may be appropriate for busier installations.
 
-## Email configuration
+## Health monitoring
 
-The sendmail addon is mandatory. Form submissions are saved before mail is attempted. By default, notifications go to the Cloudron-provisioned sender address. To choose another recipient, create `/app/data/env` in the app terminal:
+Cloudron queries Instatic's `/health` endpoint and considers the app healthy when it returns an HTTP 2xx status. Instatic currently returns a JSON body containing `"status":"ok"`, but Cloudron evaluates the HTTP status rather than matching response text. A non-2xx response or an unreachable endpoint causes Cloudron to report the app as not responding. The image's Docker health check uses the same 2xx-status rule.
 
-```sh
-INSTATIC_FORM_EMAIL_TO='owner@example.com'
-INSTATIC_FORM_EMAIL_SUBJECT_PREFIX='[Website]'
-```
+## Forms and email notifications
 
-Restart the app after changing the file. The file is backed up with `/app/data`. Never place Cloudron database or SMTP credentials there; Cloudron injects them at runtime.
+The Community App ships Instatic's native form behavior without downstream application patches. CMS-native forms validate submissions and save them to their configured Instatic data tables. Upstream Instatic `0.0.17` does not send form-submission email notifications, and this package does not request Cloudron's sendmail addon.
 
-To send a transport-only test from the app terminal without exposing the password:
-
-```sh
-printf 'To: owner@example.com\nSubject: Instatic Cloudron mail test\n\nMail transport works.\n' | /usr/sbin/sendmail -C /run/instatic/msmtprc -t -oi
-```
+If email notification is required, use a separately maintained experimental image or a supported upstream integration when one becomes available. Keep the Instatic data table as the authoritative submission record.
 
 ## Backups, restore, restart, and domains
 

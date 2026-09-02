@@ -6,7 +6,9 @@ The package builds Instatic `0.0.17` from the official GitHub release archive. T
 
 ## Database
 
-Cloudron-managed PostgreSQL is the production default. Instatic officially supports PostgreSQL through `DATABASE_URL`, maintains dialect-paired migrations, and runs migrations at startup. Cloudron injects a fresh `CLOUDRON_POSTGRESQL_URL` on every restart; `start.sh` passes it through without storing it.
+Cloudron-managed PostgreSQL is the production default. Instatic officially supports PostgreSQL through `DATABASE_URL`, maintains dialect-paired migrations, and runs migrations at startup. Cloudron injects the current `CLOUDRON_POSTGRESQL_URL` on every restart; `start.sh` passes it through without storing it.
+
+Cloudron-managed addon environment values are dynamic and may change across restart, restore, or reprovisioning. The package therefore does not define a manual credential-rotation procedure or cache database credentials. Moving or restoring content into a newly provisioned app is the acceptance path when a distinct credential set must be demonstrated.
 
 Why PostgreSQL here, despite upstream preferring SQLite for simple sites:
 
@@ -31,10 +33,8 @@ Instatic serves published static HTML/CSS itself. The package does not introduce
 
 `PUBLIC_ORIGIN` is recomputed from `CLOUDRON_APP_ORIGIN` at every start, which supports primary-domain changes. Additional aliases require an explicit comma-separated override in `/app/data/env`.
 
-## Mail patch
+## Forms and mail boundary
 
-Upstream 0.0.17 persists CMS-native form submissions but has no SMTP transport and emits no plugin hook from the public form handler. Instatic plugins run in QuickJS and cannot open SMTP sockets, so a plugin-only integration is not possible.
+Upstream Instatic `0.0.17` validates CMS-native form submissions and persists them to data tables, but does not provide form-submission email notifications. The Community App deliberately does not patch Instatic or request Cloudron's sendmail addon. This keeps application behavior owned by upstream and avoids carrying a source patch across upgrades.
 
-`patches/0001-cloudron-form-email.patch` adds one mail module and one guarded call after the database row is created. It invokes the standard `sendmail` interface, which `msmtp` routes through Cloudron's sendmail addon. The generated runtime configuration is passed explicitly with `-C /run/instatic/msmtprc`. It forces PLAIN authentication because Cloudron's app-local SMTP relay intentionally has TLS disabled, while msmtp excludes cleartext methods from automatic selection without TLS. The credential is still confined to Cloudron's private container network and a root-owned runtime file. Delivery failure is logged and does not roll back the already-persisted submission. The patch is transport-generic and suitable for proposing upstream as an optional sendmail notification hook.
-
-The default recipient is `CLOUDRON_MAIL_FROM`; operators can override it with `INSTATIC_FORM_EMAIL_TO` in `/app/data/env`.
+Email notification should be added through a supported, platform-neutral upstream capability. Until then, installations requiring notification delivery need a separately maintained experimental image; the Community App's form data table remains the authoritative submission record.

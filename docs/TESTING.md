@@ -12,7 +12,7 @@ bash -n start.sh healthcheck.sh test/cloudron-smoke.sh scripts/*.sh
 git diff --check
 ```
 
-This validates package metadata, immutable image and upstream pins, patch applicability, script structure, persistence paths, health and mail configuration, and common committed-secret patterns.
+This validates package metadata, immutable image and upstream pins, script structure, persistence paths, health configuration, the absence of downstream source patches, and common committed-secret patterns.
 
 Build the production image from a clean cache:
 
@@ -23,6 +23,8 @@ docker build --pull --no-cache -t instatic-cloudron:test .
 Confirm that the final image uses the expected `linux/amd64` architecture and starts within the manifest's memory limit.
 
 ## Disposable Cloudron acceptance
+
+A catalog installation displays the manifest `title` and `upstreamVersion` as the dashboard's **App title & version** (for this package, `Instatic 0.0.17`). A source-upload development install has no Community App catalog identity, so Cloudron can instead display its generated `local/...` Docker image name. Do not treat that development-only fallback as missing manifest metadata.
 
 Run the lightweight public checks after installation:
 
@@ -39,16 +41,20 @@ Then complete the stateful matrix on a disposable instance:
 | Authentication | anonymous admin API access is denied; login works; logout invalidates the session |
 | Uploads | uploaded media renders and persists under `/app/data/uploads` |
 | Publishing | a published page renders anonymously and remains available after restart |
+| Health | `/health` returns HTTP 2xx and Cloudron reports the app healthy; a disposable failure build returning non-2xx is reported as not responding |
 | Forms | a valid public form submission persists exactly one database row |
-| Mail | the configured recipient receives the corresponding notification through Cloudron sendmail |
 | Restart | account, content, media, published output, and the persisted secret survive |
 | Backup and restore | database content, media, published output, and the secret return from a verified backup |
-| Package update | data persists, migrations complete once, and form persistence and delivery still work |
+| Package update | a populated `0.1.4` instance updates to `0.2.0`; data persists; migrations complete once; removing sendmail does not affect startup; legacy mail variables in `/app/data/env` are harmless; form rows still persist and no notification is attempted |
 | Domain change | the new origin is accepted and the old origin is rejected after the move |
 | Memory | normal authoring, publishing, forms, restart, and backup complete without an OOM restart |
-| Logs | app-runtime logs contain no database URL, SMTP password, secret key, token, or submitted form content |
+| Logs | app-runtime logs contain no database URL, addon credential, secret key, token, or submitted form content |
 
 Cloudron platform lifecycle logs are outside the package's control. Treat exported lifecycle logs as sensitive and assess platform-generated entries separately from app stdout/stderr.
+
+## Addon credential lifecycle
+
+Cloudron does not expose manual PostgreSQL credential rotation as an ordinary app operation. Addon environment variables can change after restart, restore, or addon reprovisioning, so `start.sh` reads `CLOUDRON_POSTGRESQL_URL` on every start and never persists it. Do not treat a repair that retains the same credential as a failed package test. When new credentials must be proved, restore or migrate the content into a newly provisioned disposable instance and verify healthy startup there.
 
 ## Release gate
 

@@ -18,6 +18,5 @@ done
 rg -q "pathname === '/health'|/health" "${source_dir}/server" || { printf 'Health route contract missing\n' >&2; exit 1; }
 rg -q 'postgres://|postgresql://' "${source_dir}/server/db" || { printf 'PostgreSQL adapter contract missing\n' >&2; exit 1; }
 rg -q 'published/current' "${source_dir}" || { printf 'Published artifact contract missing\n' >&2; exit 1; }
-patch --dry-run --silent -d "${source_dir}" -p1 < "${package_dir}/patches/0001-cloudron-form-email.patch"
 
-printf 'Upstream %s contract and patch applicability verified\n' "${actual_version}"
+printf 'Unmodified upstream %s runtime contract verified\n' "${actual_version}"
