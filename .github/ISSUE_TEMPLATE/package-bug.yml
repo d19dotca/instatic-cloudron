@@ -1,0 +1,64 @@
+name: Cloudron package problem
+description: Report a reproducible problem with the Instatic Cloudron package
+title: "[Package]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for Cloudron-specific packaging problems. Do not include credentials, database exports, form submissions, backups, or raw lifecycle logs.
+  - type: input
+    id: package-version
+    attributes:
+      label: Package version
+      description: Find this in the Cloudron app information view.
+      placeholder: 0.1.4
+    validations:
+      required: true
+  - type: input
+    id: cloudron-version
+    attributes:
+      label: Cloudron version
+      placeholder: 10.0.2
+    validations:
+      required: true
+  - type: input
+    id: installation-type
+    attributes:
+      label: Installation type
+      description: Community catalog, local source build, or registry image.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Include the expected result and the actual result.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Install or update...
+        2. Open...
+        3. Observe...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized app-runtime logs
+      description: Remove domains or identifiers if desired and remove all credentials, tokens, personal data, submissions, and addon URLs. Do not paste raw Cloudron lifecycle logs.
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Safety checks
+      options:
+        - label: I removed credentials, tokens, personal data, form submissions, database URLs, and secret values.
+          required: true
+        - label: I confirmed this appears specific to the Cloudron package rather than upstream Instatic.
+          required: true

@@ -12,7 +12,9 @@ require_file() { [[ -f "${package_dir}/$1" ]] && pass "found $1" || fail "missin
 
 for file in .dockerignore .gitattributes CloudronManifest.json CloudronVersions.json Dockerfile start.sh healthcheck.sh icon.png media/instatic-setup.png \
     README.md SECURITY.md DESCRIPTION.md POSTINSTALL.md CHANGELOG LICENSE LICENSES/Instatic-MIT.txt \
-    docs/ARCHITECTURE.md docs/TESTING.md docs/UPSTREAM.md; do
+    CONTRIBUTING.md docs/ARCHITECTURE.md docs/TESTING.md docs/UPSTREAM.md \
+    .github/dependabot.yml .github/pull_request_template.md \
+    .github/ISSUE_TEMPLATE/config.yml .github/ISSUE_TEMPLATE/package-bug.yml; do
     require_file "${file}"
 done
 
@@ -23,6 +25,7 @@ if jq -e --arg manifest_version "${manifest_version}" '
     .version == $manifest_version and
     .upstreamVersion == "0.0.17" and
     .httpPort == 3001 and
+    .multiDomain == true and
     .healthCheckPath == "/health" and
     .configurePath == "/admin" and
     .checklist["create-owner-account"].message != null and
@@ -33,12 +36,20 @@ if jq -e --arg manifest_version "${manifest_version}" '
     .packageUrl == "https://github.com/d19dotca/instatic-cloudron" and
     .icon == "file://icon.png" and
     .iconUrl == ("https://raw.githubusercontent.com/d19dotca/instatic-cloudron/v" + $manifest_version + "/icon.png") and
-    .tags == ["hosting"] and
-    (.mediaLinks | length == 1)
+    (["hosting", "cms", "website", "web design", "website builder", "static", "static site", "visual editor", "wordpress", "webflow"] - .tags | length) == 0 and
+    .mediaLinks == [("https://raw.githubusercontent.com/d19dotca/instatic-cloudron/v" + $manifest_version + "/media/instatic-setup.png")]
 ' "${package_dir}/CloudronManifest.json" >/dev/null; then
     pass 'manifest contract'
 else
     fail 'manifest contract'
+fi
+
+if rg -q 'cloudron builder build' "${package_dir}/README.md" \
+    && ! rg -q '(^|[^[:alnum:]])cloudron build([[:space:]]|$)' "${package_dir}/README.md" \
+    && rg -q -- '--platform linux/amd64' "${package_dir}/.github/workflows/package.yml"; then
+    pass 'current Cloudron CLI documentation and explicit CI architecture'
+else
+    fail 'README and package workflow must use current Cloudron CLI and linux/amd64 build syntax'
 fi
 
 if ! rg -q -i 'Cloudron outbound email|provides[^.]*email notifications?|form notifications default' "${package_dir}/DESCRIPTION.md" \
@@ -118,8 +129,13 @@ done
 if rg -q '/app/data/uploads' "${package_dir}/start.sh" \
     && rg -q '/app/data/secrets/instatic-secret-key' "${package_dir}/start.sh" \
     && rg -q 'openssl rand -hex 32' "${package_dir}/start.sh" \
+    && rg -q 'mktemp.*secret_file' "${package_dir}/start.sh" \
+    && rg -q "grep -Eq '\^\[0-9a-f\]\{64\}\\\$'" "${package_dir}/start.sh" \
     && rg -q 'CLOUDRON_POSTGRESQL_URL' "${package_dir}/start.sh" \
     && rg -q 'CLOUDRON_APP_ORIGIN' "${package_dir}/start.sh" \
+    && rg -q 'CLOUDRON_ALIAS_DOMAINS' "${package_dir}/start.sh" \
+    && rg -q 'TRUSTED_PROXY_CIDRS=.*CLOUDRON_PROXY_IP' "${package_dir}/start.sh" \
+    && ! rg -q '/app/data/env|source .*/env' "${package_dir}/start.sh" \
     && ! rg -q 'CLOUDRON_MAIL_|INSTATIC_.*MAIL|msmtp|sendmail' "${package_dir}/start.sh" \
     && ! rg -q 'COPY patches/|/tmp/patches|msmtp|sendmail|INSTATIC_SENDMAIL' "${package_dir}/Dockerfile" \
     && [[ ! -e "${package_dir}/patches/0001-cloudron-form-email.patch" ]]; then

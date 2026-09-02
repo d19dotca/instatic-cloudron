@@ -6,6 +6,12 @@
 * Remove deprecated or redundant manifest metadata and use Cloudron's supported `hosting` tag.
 * Clarify package-versus-upstream version display and remove nonessential repository files.
 * Correct the Cloudron icon rasterization while preserving Instatic's complete canonical favicon, including its four corner dots.
+* Configure Instatic to trust only Cloudron's reverse proxy for forwarded client-IP attribution and rate limits.
+* Add native Cloudron location-alias support and remove the root-sourced persistent environment file.
+* Generate the per-install encryption key atomically and reject malformed persisted keys instead of replacing them.
+* Accept and validate Instatic's fresh-install `/` redirect in the public smoke test.
+* Pin Community App media to this package version and expand CMS, web-design, static-site, WordPress, and Webflow discovery tags.
+* Use a single release-branch workflow trigger to avoid the release-created tag starting a duplicate workflow run.
 
 [0.1.4]
 * Lower the default Cloudron memory limit from 1 GiB to 512 MiB based on upstream deployment sizing and constrained runtime testing.

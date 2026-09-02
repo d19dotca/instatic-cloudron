@@ -1,9 +1,14 @@
 name: package
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches: [main]
+
+concurrency:
+  group: package-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -11,8 +16,9 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install test dependencies
         run: |
           sudo apt-get update
@@ -26,4 +32,4 @@ jobs:
       - name: Package tests
         run: ./test/package-test.sh /tmp/instatic
       - name: Docker build
-        run: docker build --pull --no-cache -t instatic-cloudron:test .
+        run: docker build --pull --no-cache --platform linux/amd64 -t instatic-cloudron:test .

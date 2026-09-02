@@ -31,7 +31,7 @@ Instatic serves published static HTML/CSS itself. The package does not introduce
 
 `/admin` uses Instatic's native accounts, session cookies scoped to `/admin`, CSRF origin validation, login rate limits, step-up authentication, role capabilities, and optional TOTP MFA. Cloudron `proxyAuth` is intentionally not enabled because it would add a second login without provisioning or role-mapping Instatic users.
 
-`PUBLIC_ORIGIN` is recomputed from `CLOUDRON_APP_ORIGIN` at every start, which supports primary-domain changes. Additional aliases require an explicit comma-separated override in `/app/data/env`.
+`PUBLIC_ORIGIN` is recomputed from `CLOUDRON_APP_ORIGIN` and `CLOUDRON_ALIAS_DOMAINS` at every start. Instatic accepts multiple public origins and serves published routes independently of the request hostname, so Cloudron location aliases can serve the same site without redirecting. `TRUSTED_PROXY_CIDRS` is set to Cloudron's exact `CLOUDRON_PROXY_IP`, allowing Instatic to use Cloudron's forwarded client address for audit logs and per-IP rate limits without trusting arbitrary peers.
 
 ## Forms and mail boundary
 

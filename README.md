@@ -1,8 +1,12 @@
 # Instatic for Cloudron
 
+[![Package checks](https://github.com/d19dotca/instatic-cloudron/actions/workflows/package.yml/badge.svg)](https://github.com/d19dotca/instatic-cloudron/actions/workflows/package.yml)
+[![Latest release](https://img.shields.io/github/v/release/d19dotca/instatic-cloudron?label=package)](https://github.com/d19dotca/instatic-cloudron/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Cloudron Community App packaging for [Instatic](https://github.com/CoreBunch/Instatic), pinned to upstream `0.0.17`.
 
-Package `0.1.4` is the first public release. The current `main` branch may contain an unreleased candidate; install through `CloudronVersions.json` unless you are testing package development.
+> **Release status:** package `0.1.4` is the latest published catalog release. Package `0.2.0` is an unreleased candidate under validation. The `main` branch can therefore be newer than the catalog; use `CloudronVersions.json` unless you intentionally want to test package development.
 
 ## Install as a Community App
 
@@ -19,7 +23,7 @@ The catalog installs the published `linux/amd64` image from GitHub Container Reg
 - Cloudron-managed PostgreSQL.
 - Persistent uploads, fonts, plugins, and published artifacts under `/app/data/uploads`.
 - A unique random 256-bit `INSTATIC_SECRET_KEY` generated on first start and persisted in `/app/data/secrets` for that installation.
-- Automatic public-origin configuration after install, restart, restore, or domain change.
+- Automatic public-origin and trusted-proxy configuration after install, restart, restore, primary-domain change, or alias change.
 - Cloudron health monitoring through Instatic's `/health` endpoint, stdout/stderr logging, Cloudron backups, and update-safe immutable code.
 - Reproducible upstream and base-image pins, licensing notices, package tests, and Community App metadata.
 
@@ -36,11 +40,17 @@ cloudron install --location instatic.example.com
 
 From this directory, the CLI uploads the build context, builds the image on the Cloudron, provisions PostgreSQL and local storage, and installs the app. Follow Cloudron CLI prompts; do not commit the local Cloudron login file or tokens.
 
-For a registry build, replace the example version with the candidate in `CloudronManifest.json`:
+To update an existing development installation from the checked-out package, keep Cloudron's automatic safety backup enabled:
+
+```sh
+cloudron update --app instatic.example.com
+```
+
+For a registry build, replace the example repository with one you control. Cloudron CLI 9 uses the `builder build` subcommand:
 
 ```sh
 version=$(jq -r .version CloudronManifest.json)
-cloudron build --set-build-service --tag "registry.example.com/instatic-cloudron:${version}"
+cloudron builder build --repository "username/instatic-cloudron" --tag "${version}"
 cloudron install --location instatic.example.com --image "registry.example.com/instatic-cloudron:${version}"
 ```
 
@@ -64,11 +74,13 @@ If email notification is required, use a separately maintained experimental imag
 
 Use normal Cloudron app backups. PostgreSQL and `/app/data` are captured together by Cloudron. On restore or restart, the startup script repairs ownership, reloads current addon credentials, reuses the persisted secret, and runs upstream migrations.
 
-Changing the primary app domain is supported automatically because `PUBLIC_ORIGIN` is recomputed from `CLOUDRON_APP_ORIGIN`. If you configure an additional domain alias outside this manifest, list every accepted origin in `/app/data/env`.
+Changing the primary app domain or adding a Cloudron location alias is supported automatically. The package rebuilds Instatic's accepted `PUBLIC_ORIGIN` list from `CLOUDRON_APP_ORIGIN` and `CLOUDRON_ALIAS_DOMAINS` on every start. Each alias serves the same Instatic site; use a Cloudron redirection instead when an alternate domain should always redirect to the primary domain.
 
 ## Updates
 
 Read `docs/UPSTREAM.md`. Always test on a disposable clone/restore first, take a fresh backup, and bump the Cloudron package version. Do not change from PostgreSQL to SQLite as an ordinary package update.
+
+Published catalog versions are immutable. Candidate changes are released under a new package version, built as `linux/amd64`, tested on Cloudron, pushed to GHCR, and only then added to `CloudronVersions.json`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution and release expectations.
 
 ## Support
 
@@ -76,7 +88,7 @@ Use [GitHub Issues](https://github.com/d19dotca/instatic-cloudron/issues) for re
 
 Package-specific security reports should be submitted privately through [GitHub Security Advisories](https://github.com/d19dotca/instatic-cloudron/security/advisories/new). Upstream Instatic defects belong in the [Instatic issue tracker](https://github.com/CoreBunch/Instatic/issues).
 
-Only the latest package release is supported on a best-effort community basis.
+Only the latest package release is supported on a best-effort community basis. This repository maintains the Cloudron integration; application defects and feature requests belong in the upstream [Instatic issue tracker](https://github.com/CoreBunch/Instatic/issues).
 
 ## Licenses
 

@@ -45,8 +45,10 @@ Then complete the stateful matrix on a disposable instance:
 | Forms | a valid public form submission persists exactly one database row |
 | Restart | account, content, media, published output, and the persisted secret survive |
 | Backup and restore | database content, media, published output, and the secret return from a verified backup |
-| Package update | a populated `0.1.4` instance updates to `0.2.0`; data persists; migrations complete once; removing sendmail does not affect startup; legacy mail variables in `/app/data/env` are harmless; form rows still persist and no notification is attempted |
+| Package update | a populated `0.1.4` instance updates to `0.2.0`; data persists; migrations complete once; removing sendmail does not affect startup; any legacy `/app/data/env` file remains inert; form rows still persist and no notification is attempted |
 | Domain change | the new origin is accepted and the old origin is rejected after the move |
+| Domain alias | a Cloudron location alias serves the same published site; authenticated mutations accept the alias origin; removing the alias removes that accepted origin after restart |
+| Client IP | audit activity and per-IP rate-limit keys use the forwarded client address only when the socket peer is `CLOUDRON_PROXY_IP` |
 | Memory | normal authoring, publishing, forms, restart, and backup complete without an OOM restart |
 | Logs | app-runtime logs contain no database URL, addon credential, secret key, token, or submitted form content |
 

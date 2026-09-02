@@ -13,9 +13,23 @@ case "${admin_status}" in
     *) printf 'Unexpected admin status: HTTP %s\n' "${admin_status}" >&2; exit 1 ;;
 esac
 
-public_status=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 "${origin}/")
+headers_file=$(mktemp)
+trap 'rm -f "${headers_file}"' EXIT
+public_status=$(curl -sS -D "${headers_file}" -o /dev/null -w '%{http_code}' --max-time 10 "${origin}/")
 case "${public_status}" in
     200|404) printf 'Public route responsive: HTTP %s\n' "${public_status}" ;;
+    302)
+        public_location=$(awk 'tolower($1) == "location:" { sub(/\r$/, "", $2); print $2; exit }' "${headers_file}")
+        case "${public_location}" in
+            /admin|/admin/|"${origin}/admin"|"${origin}/admin/")
+                printf 'Fresh public route redirects to admin setup: HTTP 302 -> %s\n' "${public_location}"
+                ;;
+            *)
+                printf 'Unexpected public redirect: HTTP 302 -> %s\n' "${public_location:-<missing Location header>}" >&2
+                exit 1
+                ;;
+        esac
+        ;;
     *) printf 'Unexpected public status: HTTP %s\n' "${public_status}" >&2; exit 1 ;;
 esac
 

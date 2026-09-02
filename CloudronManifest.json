@@ -9,6 +9,7 @@
   "minBoxVersion": "10.0.0",
   "healthCheckPath": "/health",
   "httpPort": 3001,
+  "multiDomain": true,
   "configurePath": "/admin",
   "checklist": {
     "create-owner-account": {
@@ -28,10 +29,19 @@
   "icon": "file://icon.png",
   "iconUrl": "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/v0.2.0/icon.png",
   "tags": [
-    "hosting"
+    "hosting",
+    "cms",
+    "website",
+    "web design",
+    "website builder",
+    "static",
+    "static site",
+    "visual editor",
+    "wordpress",
+    "webflow"
   ],
   "mediaLinks": [
-    "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/main/media/instatic-setup.png"
+    "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/v0.2.0/media/instatic-setup.png"
   ],
   "postInstallMessage": "file://POSTINSTALL.md",
   "changelog": "file://CHANGELOG"
