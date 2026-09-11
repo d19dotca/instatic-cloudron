@@ -1,3 +1,3 @@
 #!/bin/bash
 set -euo pipefail
-exec /usr/local/bin/bun /app/code/server/healthcheck.ts
+exec curl -fsS -o /dev/null http://127.0.0.1:3001/health

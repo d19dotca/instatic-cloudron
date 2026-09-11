@@ -1,3 +1,9 @@
+[0.3.0]
+* Update Instatic to 0.0.19, including its latest security and runtime fixes.
+* Use Instatic's official checksummed Linux server artifact instead of rebuilding the application from source.
+* Identify Dustin Dauncey (d19) as the packager and keep upstream and package links distinct.
+* Trim package metadata and repository documentation to the Cloudron-specific essentials.
+
 [0.2.0]
 * Update upstream Instatic from 0.0.17 to 0.0.18, including public-form event, publishing asset, AVIF media, import, and plugin-filter fixes.
 * Remove the downstream form-email source patch and package-level SMTP transport so the Community App runs unmodified upstream Instatic.

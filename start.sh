@@ -49,4 +49,4 @@ export STATIC_DIR=/app/code/dist
 export PORT=3001
 
 echo "Starting Instatic with PostgreSQL and persistent uploads at /app/data/uploads"
-exec /usr/local/bin/gosu cloudron:cloudron /usr/local/bin/bun run /app/code/server/index.ts
+exec /usr/local/bin/gosu cloudron:cloudron /app/code/instatic-server

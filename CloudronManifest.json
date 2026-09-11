@@ -1,11 +1,11 @@
 {
   "id": "io.github.d19dotca.instatic",
   "title": "Instatic",
-  "author": "Dustin Dauncey <dustin@d19.ca>",
+  "author": "Instatic",
   "tagline": "Visual CMS that publishes fast, plain HTML",
   "description": "file://DESCRIPTION.md",
-  "version": "0.2.0",
-  "upstreamVersion": "0.0.18",
+  "version": "0.3.0",
+  "upstreamVersion": "0.0.19",
   "minBoxVersion": "10.0.0",
   "healthCheckPath": "/health",
   "httpPort": 3001,
@@ -24,24 +24,19 @@
   "manifestVersion": 2,
   "website": "https://instatic.com",
   "packageUrl": "https://github.com/d19dotca/instatic-cloudron",
-  "packagerName": "d19dotca",
+  "packagerName": "Dustin Dauncey (d19)",
   "packagerUrl": "https://github.com/d19dotca",
-  "icon": "file://icon.png",
-  "iconUrl": "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/v0.2.0/icon.png",
+  "iconUrl": "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/v0.3.0/icon.png",
   "tags": [
     "hosting",
     "cms",
     "website",
-    "web design",
     "website builder",
-    "static",
     "static site",
-    "visual editor",
-    "wordpress",
-    "webflow"
+    "visual editor"
   ],
   "mediaLinks": [
-    "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/v0.2.0/media/instatic-setup.png"
+    "https://raw.githubusercontent.com/d19dotca/instatic-cloudron/v0.3.0/media/instatic-setup.png"
   ],
   "postInstallMessage": "file://POSTINSTALL.md",
   "changelog": "file://CHANGELOG"
