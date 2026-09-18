@@ -116,9 +116,13 @@ fi
 
 if rg -q '^  schedule:$' "${package_dir}/.github/workflows/upstream-update.yml" \
     && rg -q '^  workflow_dispatch:$' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q '^  actions: write$' "${package_dir}/.github/workflows/upstream-update.yml" \
     && rg -q '^  contents: write$' "${package_dir}/.github/workflows/upstream-update.yml" \
     && rg -q '^  pull-requests: write$' "${package_dir}/.github/workflows/upstream-update.yml" \
     && rg -q 'docker build .*--platform linux/amd64|--platform linux/amd64' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q 'git diff --cached --quiet' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q 'gh workflow run package\.yml --ref' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q 'gh run watch .*--exit-status' "${package_dir}/.github/workflows/upstream-update.yml" \
     && ! rg -q 'docker push|gh release create|cloudron versions add|cloudron (install|update)' "${package_dir}/.github/workflows/upstream-update.yml"; then
     pass 'upstream updater prepares and tests PRs without publishing or deploying'
 else
