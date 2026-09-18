@@ -4,6 +4,7 @@ set -euo pipefail
 package_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 failures=0
 manifest_version=$(jq -r .version "${package_dir}/CloudronManifest.json")
+upstream_version=$(jq -r .upstreamVersion "${package_dir}/CloudronManifest.json")
 
 pass() { printf 'PASS: %s\n' "$1"; }
 fail() { printf 'FAIL: %s\n' "$1" >&2; failures=$((failures + 1)); }
@@ -12,16 +13,17 @@ require_file() { [[ -f "${package_dir}/$1" ]] && pass "found $1" || fail "missin
 for file in .dockerignore .gitattributes CloudronManifest.json CloudronVersions.json Dockerfile \
     start.sh healthcheck.sh README.md SECURITY.md DESCRIPTION.md POSTINSTALL.md CHANGELOG \
     LICENSE LICENSES/Instatic-MIT.txt icon.png media/instatic-setup.png \
-    test/cloudron-smoke.sh .github/workflows/package.yml; do
+    test/cloudron-smoke.sh test/upstream-update-test.sh scripts/prepare-upstream-update.sh \
+    .github/workflows/package.yml .github/workflows/upstream-update.yml; do
     require_file "${file}"
 done
 
-if jq -e --arg manifest_version "${manifest_version}" '
+if jq -e --arg manifest_version "${manifest_version}" --arg upstream_version "${upstream_version}" '
     .manifestVersion == 2 and
     .author == "Instatic" and
     .title == "Instatic" and
     .version == $manifest_version and
-    .upstreamVersion == "0.0.19" and
+    .upstreamVersion == $upstream_version and
     .httpPort == 3001 and
     .multiDomain == true and
     .healthCheckPath == "/health" and
@@ -43,8 +45,9 @@ else
     fail 'manifest contract'
 fi
 
-if rg -q 'INSTATIC_VERSION=0\.0\.19' "${package_dir}/Dockerfile" \
-    && rg -q 'INSTATIC_ARTIFACT_SHA256=d458d18175030b0af87b5ef404b674248814150fb698e8d7d912cbe99ce1e750' "${package_dir}/Dockerfile" \
+artifact_sha256=$(sed -n 's/^ARG INSTATIC_ARTIFACT_SHA256=//p' "${package_dir}/Dockerfile")
+if rg -Fq "INSTATIC_VERSION=${upstream_version}" "${package_dir}/Dockerfile" \
+    && [[ "${artifact_sha256}" =~ ^[0-9a-f]{64}$ ]] \
     && rg -q 'releases/download/v\$\{INSTATIC_VERSION\}/instatic-server-\$\{INSTATIC_VERSION\}-linux-x64\.tar\.gz' "${package_dir}/Dockerfile" \
     && rg -q 'cloudron/base:5\.1\.0@sha256:[0-9a-f]{64}' "${package_dir}/Dockerfile" \
     && ! rg -q '(^|:)latest([ @]|$)|oven/bun|archive/refs/tags' "${package_dir}/Dockerfile"; then
@@ -73,12 +76,19 @@ else
     fail 'health check contract'
 fi
 
-for script in start.sh healthcheck.sh test/package-test.sh test/cloudron-smoke.sh; do
+for script in start.sh healthcheck.sh scripts/prepare-upstream-update.sh test/package-test.sh test/cloudron-smoke.sh test/upstream-update-test.sh; do
     if bash -n "${package_dir}/${script}"; then pass "bash syntax: ${script}"; else fail "bash syntax: ${script}"; fi
 done
 
-if rg -q '^\[0\.3\.0\]$' "${package_dir}/CHANGELOG" \
-    && rg -q 'Instatic `0\.0\.19`' "${package_dir}/README.md" "${package_dir}/DESCRIPTION.md" \
+if "${package_dir}/test/upstream-update-test.sh"; then
+    pass 'upstream updater fixtures'
+else
+    fail 'upstream updater fixtures'
+fi
+
+if rg -Fq "[${manifest_version}]" "${package_dir}/CHANGELOG" \
+    && rg -Fq "Instatic \`${upstream_version}\`" "${package_dir}/README.md" "${package_dir}/DESCRIPTION.md" \
+    && rg -Fq "placeholder: ${manifest_version}" "${package_dir}/.github/ISSUE_TEMPLATE/package-bug.yml" \
     && ! rg -q '0\.0\.18' "${package_dir}/README.md" "${package_dir}/DESCRIPTION.md" "${package_dir}/POSTINSTALL.md"; then
     pass 'current package documentation'
 else
@@ -102,6 +112,21 @@ if jq -e '
     pass 'published catalog history'
 else
     fail 'catalog history contract'
+fi
+
+if rg -q '^  schedule:$' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q '^  workflow_dispatch:$' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q '^  actions: write$' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q '^  contents: write$' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q '^  pull-requests: write$' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q 'docker build .*--platform linux/amd64|--platform linux/amd64' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q 'git diff --cached --quiet' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q 'gh workflow run package\.yml --ref' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && rg -q 'gh run watch .*--exit-status' "${package_dir}/.github/workflows/upstream-update.yml" \
+    && ! rg -q 'docker push|gh release create|cloudron versions add|cloudron (install|update)' "${package_dir}/.github/workflows/upstream-update.yml"; then
+    pass 'upstream updater prepares and tests PRs without publishing or deploying'
+else
+    fail 'upstream updater safety contract'
 fi
 
 if rg -q -- '--platform linux/amd64' "${package_dir}/.github/workflows/package.yml"; then
