@@ -1,0 +1,93 @@
+name: upstream-update
+
+on:
+  schedule:
+    - cron: "17 15 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: upstream-update
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out package source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ripgrep
+
+      - name: Prepare stable upstream update
+        id: update
+        run: ./scripts/prepare-upstream-update.sh
+
+      - name: Run package tests
+        if: steps.update.outputs.changed == 'true'
+        run: ./test/package-test.sh
+
+      - name: Build disposable linux/amd64 image
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          docker build --pull --no-cache --platform linux/amd64 \
+            -t "instatic-cloudron:test-${{ steps.update.outputs.package_version }}" .
+
+      - name: Create or refresh update pull request
+        if: steps.update.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPSTREAM_VERSION: ${{ steps.update.outputs.upstream_version }}
+          PACKAGE_VERSION: ${{ steps.update.outputs.package_version }}
+          RELEASE_URL: ${{ steps.update.outputs.release_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="automation/instatic-${UPSTREAM_VERSION}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --heads origin "${branch}" >/dev/null 2>&1; then
+            git fetch origin "${branch}:refs/remotes/origin/${branch}"
+          fi
+
+          git checkout -B "${branch}"
+          git add CloudronManifest.json Dockerfile README.md DESCRIPTION.md CHANGELOG \
+            .github/ISSUE_TEMPLATE/package-bug.yml
+          git commit -m "Update Instatic to ${UPSTREAM_VERSION}"
+          git push --force-with-lease origin "HEAD:${branch}"
+
+          body_file=$(mktemp)
+          trap 'rm -f "${body_file}"' EXIT
+          {
+            printf 'Automated update for [Instatic %s](%s).\n\n' "${UPSTREAM_VERSION}" "${RELEASE_URL}"
+            printf -- '- Cloudron package candidate: `%s`\n' "${PACKAGE_VERSION}"
+            printf -- '- Official Linux x64 artifact and checksum verified\n'
+            printf -- '- Package tests passed\n'
+            printf -- '- Disposable `linux/amd64` image build passed\n\n'
+            printf 'This PR does **not** publish an image, GitHub release, catalog entry, or Cloudron update. '
+            printf 'A disposable Cloudron clean-install and populated-upgrade test remain required before release.\n'
+          } > "${body_file}"
+
+          pr_url=$(gh pr list --base main --head "${branch}" --state open --json url --jq '.[0].url // empty')
+          if [[ -z "${pr_url}" ]]; then
+            gh pr create \
+              --base main \
+              --head "${branch}" \
+              --title "Update Instatic to ${UPSTREAM_VERSION}" \
+              --body-file "${body_file}"
+          else
+            gh pr edit "${pr_url}" \
+              --title "Update Instatic to ${UPSTREAM_VERSION}" \
+              --body-file "${body_file}"
+            printf 'Refreshed %s\n' "${pr_url}"
+          fi

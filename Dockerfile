@@ -1,7 +1,7 @@
 FROM cloudron/base:5.1.0@sha256:1c0666c9abe9e2090d33686826d4e97769b799124573118d41e0d7485135748e
 
-ARG INSTATIC_VERSION=0.0.19
-ARG INSTATIC_ARTIFACT_SHA256=d458d18175030b0af87b5ef404b674248814150fb698e8d7d912cbe99ce1e750
+ARG INSTATIC_VERSION=0.0.20
+ARG INSTATIC_ARTIFACT_SHA256=061c8190a264e2927d57c3520c62af7687da82457119e9f2213687718082a019
 
 LABEL org.opencontainers.image.source="https://github.com/d19dotca/instatic-cloudron" \
       org.opencontainers.image.description="Instatic packaged for Cloudron" \

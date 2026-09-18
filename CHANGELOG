@@ -1,3 +1,8 @@
+[0.3.1]
+* Update Instatic from 0.0.19 to 0.0.20.
+* Verify the official Linux x64 artifact with SHA-256 `061c8190a264e2927d57c3520c62af7687da82457119e9f2213687718082a019`.
+* Upstream release: https://github.com/CoreBunch/Instatic/releases/tag/v0.0.20
+
 [0.3.0]
 * Update Instatic to 0.0.19, including its latest security and runtime fixes.
 * Use Instatic's official checksummed Linux server artifact instead of rebuilding the application from source.
