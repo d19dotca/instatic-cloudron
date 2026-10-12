@@ -19,7 +19,7 @@ Cloudron 10 or newer is required. After installation, open `/admin` and create t
 - PostgreSQL data and `/app/data` are included in Cloudron backups.
 - Uploaded media, fonts, plugins, and published files persist under `/app/data/uploads`.
 - The package derives trusted origins from the Cloudron primary domain and aliases on every start.
-- Instatic `0.0.20` stores native form submissions but does not send submission emails.
+- Instatic `0.0.21` stores native form submissions but does not send submission emails.
 - Package issues belong in this repository. Application issues belong in the [Instatic repository](https://github.com/CoreBunch/Instatic/issues).
 
 ## Testing an update
