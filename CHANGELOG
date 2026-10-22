@@ -1,3 +1,7 @@
+[0.3.2]
+* Update the pinned Cloudron base to 6.0.1 for refreshed system CA trust after the eMudhra compromise.
+* The upstream compiled Bun artifact is unchanged; its embedded runtime and certificate trust require separate validation before release.
+
 [0.3.1]
 * Update Instatic from 0.0.19 to 0.0.20.
 * Verify the official Linux x64 artifact with SHA-256 `061c8190a264e2927d57c3520c62af7687da82457119e9f2213687718082a019`.

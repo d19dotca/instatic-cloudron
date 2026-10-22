@@ -49,7 +49,7 @@ artifact_sha256=$(sed -n 's/^ARG INSTATIC_ARTIFACT_SHA256=//p' "${package_dir}/D
 if rg -Fq "INSTATIC_VERSION=${upstream_version}" "${package_dir}/Dockerfile" \
     && [[ "${artifact_sha256}" =~ ^[0-9a-f]{64}$ ]] \
     && rg -q 'releases/download/v\$\{INSTATIC_VERSION\}/instatic-server-\$\{INSTATIC_VERSION\}-linux-x64\.tar\.gz' "${package_dir}/Dockerfile" \
-    && rg -q 'cloudron/base:5\.1\.0@sha256:[0-9a-f]{64}' "${package_dir}/Dockerfile" \
+    && rg -q 'cloudron/base:6\.0\.1@sha256:[0-9a-f]{64}' "${package_dir}/Dockerfile" \
     && ! rg -q '(^|:)latest([ @]|$)|oven/bun|archive/refs/tags' "${package_dir}/Dockerfile"; then
     pass 'official upstream artifact and Cloudron base are immutably pinned'
 else
